@@ -43,3 +43,11 @@ $factory->define(App\Profiles\Company::class, function (Faker\Generator $faker) 
 		'industry' => 'Apparel'
     ];
 });
+
+$factory->define(App\Orders\Order::class, function (Faker\Generator $faker) {
+	return [
+		'name' => $faker->catchPhrase,
+		'soft_due' => $faker->dateTimeInInterval($startDate = '-20 days', $interval = '+ 90 days', $timezone = date_default_timezone_get()),
+		'hard_due' => $faker->dateTimeInInterval($startDate = '-5 days', $interval = '+ 40 days', $timezone = date_default_timezone_get()),
+    ];
+});

@@ -4,6 +4,7 @@ namespace App\Profiles;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Profiles\CompanyProfile;
+use App\Orders\Order;
 use App\User;
 
 class Company extends Model
@@ -28,5 +29,14 @@ class Company extends Model
     	return $this->hasOne(CompanyProfile::class);
     }
     
-    
+	/**
+     * Description
+     *
+     * @return void
+     */
+    public function orders()
+    {
+    	return $this->hasMany(Order::class);
+    }
+	        
 }

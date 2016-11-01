@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Companies;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Profiles\Company;
-use App\Profiles\UserRole;
+use App\Http\Controllers\Controller;
 use App\Utilities\Utility;
+use App\Profiles\Company;
 
-class DashboardController extends Controller
+class CompanyController extends Controller
 {
 	use Utility;
-
+    
     /**
      * Description
      *
@@ -25,7 +25,7 @@ class DashboardController extends Controller
     		$companies = Company::all();
     	}
     	
-    	return view('dashboard.index', compact('companies'));
+    	return view('companies.index', compact('companies'));
     }
     
 }
