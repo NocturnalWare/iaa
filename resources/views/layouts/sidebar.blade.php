@@ -32,3 +32,10 @@
 <button class="btn col-xs-12 btn-primary">
 	Reports
 </button>
+@if(\App\Utilities\Utility::findGod() === true)
+	<a href="{{route('users.index')}}">
+		<button class="btn col-xs-12 btn-primary">
+			Users
+		</button>
+	</a>
+@endif

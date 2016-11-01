@@ -33,5 +33,15 @@ class Order extends Model
     {
     	return $this->belongsTo(Company::class);
     }
+        
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function updates()
+    {
+    	return $this->hasMany(OrderUpdate::class);
+    }
     
 }

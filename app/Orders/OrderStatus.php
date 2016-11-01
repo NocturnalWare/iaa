@@ -15,5 +15,15 @@ class OrderStatus extends Model
     {
     	return $this->hasMany(Order::class);
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function orderupdates()
+    {
+    	return $this->hasMany(OrderUpdate::class);
+    }
     
 }

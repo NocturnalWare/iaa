@@ -11,7 +11,7 @@ trait Utility
 	 *
 	 * @return void
 	 */
-	public function findGod()
+	public static function findGod()
 	{	
 		$check = \Auth::user()->roles()->each(function($role){
 			if($role->role_value === UserRole::GOD){

@@ -23,10 +23,14 @@
 					@endif"
 				>{{\Carbon::parse($order->hard_due)->format('m/d/Y')}}</td>
 				<td>
-					<button class="btn btn-xs btn-info pull-right">
-						<i class="fa fa-check-square-o"></i>
-						Ready
-					</button>
+					<form action="{{route('orders.update', $order->id)}}" method="POST">
+						<input type="hidden" name="_token" value="{{csrf_token()}}">
+						<input type="hidden" name="_method" value="PUT">
+						<button type="submit" name="update_{{$order->id}}" class="btn btn-xs btn-info pull-right">
+							<i class="fa fa-check-square-o"></i>
+							Ready
+						</button>
+					</form>
 				</td>
 			</tr>
 		@endforeach

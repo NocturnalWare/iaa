@@ -4,7 +4,6 @@
 			<th>Name</th>
 			<th>Ordered</th>
 			<th>Due By</th>
-			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -22,12 +21,6 @@
 						text-success
 					@endif"
 				>{{\Carbon::parse($order->hard_due)->format('m/d/Y')}}</td>
-				<td>
-					<button class="btn btn-xs btn-info pull-right">
-						<i class="fa fa-check-square-o"></i>
-						Ready
-					</button>
-				</td>
 			</tr>
 		@endforeach
 	</tbody>

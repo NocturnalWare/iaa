@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Profiles\UserProfile;
 use App\Profiles\UserRole;
 use App\Profiles\Company;
+use App\Orders\OrderUpdate;
 
 class User extends Authenticatable
 {
@@ -59,6 +60,16 @@ class User extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function orderupdates()
+    {
+        return $this->hasMany(OrderUpdate::class);
     }
     
 }
