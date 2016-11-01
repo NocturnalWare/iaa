@@ -24,7 +24,11 @@ Route::get('/home', 'HomeController@index');
 Route::group(['middleware' => 'auth'], function(){
 	//COMPANY ROUTES
 	Route::get('/companies', 'Companies\CompanyController@index')->name('companies.index');
+	Route::get('/companies/{company}', 'Companies\CompanyController@edit')->name('companies.edit');
 
+	//ORDER ROUTES
+	Route::get('/orders/{order}', 'Orders\OrdersController@show')->name('orders.show');
+	
 	//USER ROUTES
 	Route::get('/user/dashboard', 'DashboardController@index')->name('dashboard');
 	Route::get('/user/profile', 'User\ProfileController@edit')->name('user.edit');

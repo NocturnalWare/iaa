@@ -26,6 +26,16 @@ class CompanyController extends Controller
     	}
     	
     	return view('companies.index', compact('companies'));
+    }    
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function edit(Company $company)
+    {
+    	return view('companies.edit', compact('company'));
     }
     
 }
