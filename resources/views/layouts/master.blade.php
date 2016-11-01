@@ -18,7 +18,7 @@
             'csrfToken' => csrf_token(),
         ]); ?>
     </script>
-    <link href="http://localhost/custom-ink/public/css/final.css" rel="stylesheet">
+    <link href="{{env('APP_URL')}}/css/final.css" rel="stylesheet">
 
 </head>
 
