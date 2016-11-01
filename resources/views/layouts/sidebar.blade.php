@@ -1,37 +1,54 @@
-<button class="btn col-xs-12 btn-primary">
-	Dashboard
-</button>
-<button class="btn col-xs-12 btn-primary">
-	<span class="badge">2</span>
-	New Orders 
-</button>
+<a href="{{route('dashboard')}}">
 	<button class="btn col-xs-12 btn-primary">
-	<span class="badge">6</span>
-	Artwork
-</button>
+		Dashboard
+	</button>
+</a>
+<a href="{{route('neworders.index')}}">
 	<button class="btn col-xs-12 btn-primary">
-	<span class="badge">11</span>
-	Production
-</button>
+		<span class="badge">{{count($neworders)}}</span>
+		New Orders 
+	</button>
+</a>
+<a href="{{route('artorders.index')}}">
 	<button class="btn col-xs-12 btn-primary">
-	<span class="badge">3</span>
-	Complete
-</button>
+		<span class="badge">{{count($artorders)}}</span>
+		Artwork
+	</button>
+</a>
+<a href="{{route('productionorders.index')}}">
 	<button class="btn col-xs-12 btn-primary">
-	<span class="badge">62</span>
-	Shipped
-</button>
+		<span class="badge">{{count($productionorders)}}</span>
+		Production
+	</button>
+</a>
+<a href="{{route('completeorders.index')}}">
 	<button class="btn col-xs-12 btn-primary">
-	<span class="badge">9762</span>
-	Delivered
-</button>
+		<span class="badge">{{count($completeorders)}}</span>
+		Complete
+	</button>
+</a>
+<a href="{{route('shippedorders.index')}}">
 	<button class="btn col-xs-12 btn-primary">
-	<span class="badge">27</span>
-	Purchase Orders
-</button>
-<button class="btn col-xs-12 btn-primary">
-	Reports
-</button>
+		<span class="badge">{{count($shippedorders)}}</span>
+		Shipped
+	</button>
+</a>
+<a href="{{route('deliveredorders.index')}}">
+	<button class="btn col-xs-12 btn-primary">
+		<span class="badge">{{count($deliveredorders)}}</span>
+		Delivered
+	</button>
+</a>
+<a href="{{route('dashboard')}}">
+	<button class="btn col-xs-12 btn-primary">
+		Purchase Orders
+	</button>
+</a>
+<a href="{{route('dashboard')}}">
+	<button class="btn col-xs-12 btn-primary">
+		Reports
+	</button>
+</a>
 @if(\App\Utilities\Utility::findGod() === true)
 	<a href="{{route('users.index')}}">
 		<button class="btn col-xs-12 btn-primary">

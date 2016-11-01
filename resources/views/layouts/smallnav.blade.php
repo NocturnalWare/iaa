@@ -1,49 +1,49 @@
 <li>
 	<a href="{{route('dashboard')}}">
-		Dashboard
+			Dashboard
 	</a>
 </li>
 <li>
-	<a href="{{route('dashboard')}}">
-		<span class="badge">2</span>
+	<a href="{{route('neworders.index')}}">
+		<span class="badge">{{count($neworders)}}</span>
 		New Orders 
 	</a>
 </li>
 <li>
-	<a href="{{route('dashboard')}}">	
-		<span class="badge">6</span>
+	<a href="{{route('artorders.index')}}">
+		<span class="badge">{{count($artorders)}}</span>
 		Artwork
 	</a>
 </li>
 <li>
-	<a href="{{route('dashboard')}}">
-		<span class="badge">11</span>
+	<a href="{{route('productionorders.index')}}">
+		<span class="badge">{{count($productionorders)}}</span>
 		Production
 	</a>
 </li>
 <li>
-	<a href="{{route('dashboard')}}">
-		<span class="badge">3</span>
+	<a href="{{route('completeorders.index')}}">
+		<span class="badge">{{count($completeorders)}}</span>
 		Complete
 	</a>
 </li>
 <li>
-	<a href="{{route('dashboard')}}">
-		<span class="badge">62</span>
+	<a href="{{route('shippedorders.index')}}">
+		<span class="badge">{{count($shippedorders)}}</span>
 		Shipped
 	</a>
 </li>
 <li>
-	<a href="{{route('dashboard')}}">
-		<span class="badge">9762</span>
+	<a href="{{route('deliveredorders.index')}}">
+		<span class="badge">{{count($deliveredorders)}}</span>
 		Delivered
 	</a>
 </li>
 <li>
 	<a href="{{route('dashboard')}}">
-		<span class="badge">27</span>
 		Purchase Orders
 	</a>
+</li>
 </li>
 <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">

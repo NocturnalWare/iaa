@@ -21,7 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 
-Route::group(['middleware' => 'auth'], function(){
+Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	//COMPANY ROUTES
 	Route::get('/companies', 'Companies\CompanyController@index')->name('companies.index');
 	Route::get('/companies/{company}', 'Companies\CompanyController@edit')->name('companies.edit');
@@ -29,6 +29,19 @@ Route::group(['middleware' => 'auth'], function(){
 	//ORDER ROUTES
 	Route::get('/orders/{order}', 'Orders\OrdersController@show')->name('orders.show');
 	Route::put('/orders/{order}/update', 'Orders\OrdersController@update')->name('orders.update');
+
+	//NEW
+	Route::get('neworders/orders', 'Orders\NewOrdersController@index')->name('neworders.index');
+	//ARTWORK
+	Route::get('artwork/orders', 'Orders\ArtOrdersController@index')->name('artorders.index');
+	//PRODUCTION
+	Route::get('production/orders', 'Orders\ProductionOrdersController@index')->name('productionorders.index');
+	//COMPLETE
+	Route::get('complete/orders', 'Orders\CompleteOrdersController@index')->name('completeorders.index');
+	//SHIPPED
+	Route::get('shipped/orders', 'Orders\ShippedOrdersController@index')->name('shippedorders.index');
+	//DELIVERED
+	Route::get('delivered/orders', 'Orders\DeliveredOrdersController@index')->name('deliveredorders.index');
 
 	//USER ROUTES
 	Route::get('/user', 'User\UsersController@index')->name('users.index');

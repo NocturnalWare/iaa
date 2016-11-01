@@ -11,7 +11,7 @@
 					@foreach($user->orderupdates as $update)
 						<tr>
 							<td>Moved 
-								<a href="{{route('orders.show', $update->order->id)}}">{{$update->order->name}}</a> to {{$update->status->name}}</td>
+								<a href="{{route('orders.show', $update->order->id)}}">{{$update->order->name}}</a> from {{$update->status->name}}</td>
 						</tr>
 					@endforeach
 				</table>
