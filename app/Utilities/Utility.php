@@ -13,19 +13,22 @@ trait Utility
 	 */
 	public static function findGod()
 	{	
-		$check = \Auth::user()->roles()->each(function($role){
-			if($role->role_value === UserRole::GOD){
+		if(\Auth::check()){
+				
+			$check = \Auth::user()->roles()->each(function($role){
+				if($role->role_value === UserRole::GOD){
+					return true;
+				}else{
+					return false;
+				}
+			});
+
+			if($check === true){
 				return true;
-			}else{
-				return false;
 			}
-		});
 
-		if($check === true){
-			return true;
+			return false;
 		}
-
-		return false;
 	}
 	
 }
