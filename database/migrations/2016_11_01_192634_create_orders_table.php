@@ -16,6 +16,8 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
+            $table->integer('status_id');
+            $table->string('name')->nullable();
             $table->datetime('soft_due')->nullable();
             $table->datetime('hard_due')->nullable();
             $table->timestamps();
