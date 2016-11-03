@@ -1,9 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-
+<legend class="col-xs-12">
+	<h2>Companies
+	<a href="{{route('companies.create')}}">
+		<button class="btn btn-sm btn-primary pull-right">NEW COMPANY</button>
+	</h2>
+	
+</legend>
 <div class="row">
-	<div class="col-xs-12 col-md-11">
+	<div class="col-xs-12">
 		@foreach($companies as $company)
 			<h3>
 				<a href="{{route('companies.edit', $company->id)}}">{{$company->name}}</a>

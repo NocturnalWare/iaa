@@ -1,8 +1,7 @@
 const elixir = require('laravel-elixir');
 
-require('laravel-elixir-vue-2');
 gulp = require('gulp');
-// require('laravel-elixir-vueify');
+require('laravel-elixir-vueify');
 /*
  |--------------------------------------------------------------------------
  | Elixir Asset Management

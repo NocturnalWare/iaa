@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Orders\Order;
+use Illuminate\Support\Collection;
 
 class SetOrderCounts
 {
@@ -16,18 +17,46 @@ class SetOrderCounts
      */
     public function handle($request, Closure $next)
     {
-        $orders = Order::where('status_id', Order::ORDERED)->get();
-        view()->share('neworders', $orders);
-        $orders = Order::where('status_id', Order::ARTWORK)->get();
-        view()->share('artorders', $orders);
-        $orders = Order::where('status_id', Order::PRODUCTION)->get();
-        view()->share('productionorders', $orders);
-        $orders = Order::where('status_id', Order::COMPLETE)->get();
-        view()->share('completeorders', $orders);
-        $orders = Order::where('status_id', Order::SHIPPED)->get();
-        view()->share('shippedorders', $orders);
-        $orders = Order::where('status_id', Order::DELIVERED)->get();
-        view()->share('deliveredorders', $orders);
+        $orders = [];
+        $orders['neworders'] = [];
+        $orders['artorders'] = [];
+        $orders['productionorders'] = [];
+        $orders['completeorders'] = [];
+        $orders['shippedorders'] = [];
+        $orders['deliveredorders'] = [];
+
+        foreach(Order::all() as $order){
+            if($order->status_id == Order::ORDERED){
+                $orders['neworders'][] = $order;
+            }
+            if($order->status_id == Order::ARTWORK){
+                $orders['artorders'][] = $order;
+            }
+            if($order->status_id == Order::PRODUCTION){
+                $orders['productionorders'][] = $order;
+            }
+            if($order->status_id == Order::COMPLETE){
+                $orders['completeorders'][] = $order;
+            }
+            if($order->status_id == Order::SHIPPED){
+                $orders['shippedorders'][] = $order;
+            }
+            if($order->status_id == Order::DELIVERED){
+                $orders['deliveredorders'][] = $order;
+            }
+        };
+
+        view()->share([
+            'neworders' => $orders['neworders'],
+            'artorders' => $orders['artorders'],
+            'productionorders' => $orders['productionorders'],
+            'completeorders' => $orders['completeorders'],
+            'shippedorders' => $orders['shippedorders'],
+            'deliveredorders' => $orders['deliveredorders'],
+        ]);
+
+        \JavaScript::put(['neworders' => $orders, 'orders' => $orders]);
+
 
         return $next($request);
     }

@@ -4,7 +4,12 @@
 
 <div class="row">
 	<legend>
-		<h1>{{$company->name}}</h1>
+		<h1>
+			{{$company->name}}
+			<a href="{{route('orders.create')}}">
+				<button class="btn btn-primary">NEW ORDER</button>
+			</a>
+		</h1>
 	</legend>
 	<div class="col-xs-10">
 		<div class="well">

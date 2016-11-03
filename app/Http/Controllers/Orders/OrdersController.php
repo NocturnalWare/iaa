@@ -9,9 +9,12 @@ use App\Http\Controllers\Controller;
 use App\Orders\Order;
 use App\Orders\OrderUpdate;
 use App\Orders\OrderStatus;
+use App\Profiles\Company;
+use App\Utilities\Utility;
 
 class OrdersController extends Controller
 {
+	use Utility;
     /**
      * Description
      *
@@ -41,5 +44,21 @@ class OrdersController extends Controller
 
     	return redirect()->route('companies.edit', $order->company_id);
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function create()
+    {
+    	$companies = [];
+    	if($this->findGod() === true){
+    		$companies = Company::all();
+    	}
+
+    	return view('orders.create', compact('companies'));
+    }
+    
     
 }

@@ -9,6 +9,10 @@ use App\User;
 
 class Company extends Model
 {
+	protected $fillable = [
+		'name',
+		'industry'
+	];
     /**
      * Description
      *

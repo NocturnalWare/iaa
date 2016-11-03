@@ -24,11 +24,15 @@ Route::get('/home', 'HomeController@index');
 Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	//COMPANY ROUTES
 	Route::get('/companies', 'Companies\CompanyController@index')->name('companies.index');
+	Route::post('/companies', 'Companies\CompanyController@store')->name('companies.store');
+	Route::get('/companies/create', 'Companies\CompanyController@create')->name('companies.create');
 	Route::get('/companies/{company}', 'Companies\CompanyController@edit')->name('companies.edit');
 
 	//ORDER ROUTES
-	Route::get('/orders/{order}', 'Orders\OrdersController@show')->name('orders.show');
+	Route::get('/orders/{order}/show', 'Orders\OrdersController@show')->name('orders.show');
+	Route::get('/orders/create', 'Orders\OrdersController@create')->name('orders.create');
 	Route::put('/orders/{order}/update', 'Orders\OrdersController@update')->name('orders.update');
+	Route::post('/orders', 'Orders\OrdersController@store')->name('orders.store');
 
 	//NEW
 	Route::get('neworders/orders', 'Orders\NewOrdersController@index')->name('neworders.index');
