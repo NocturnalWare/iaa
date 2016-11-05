@@ -8,7 +8,7 @@
 		</tr>
 	</thead>
 	<tbody>
-	@foreach($company->orders()->where('status_id', \App\Orders\Order::SHIPPED)->get() as $order)
+	@foreach($shippedorders as $order)
 			<tr>
 				<td>
 					<a href="{{route('orders.show', $order->id)}}">{{$order->name}}</a>
@@ -21,7 +21,9 @@
 					@if(\Carbon::parse($order->hard_due) > \Carbon::parse()) 
 						text-success
 					@endif"
-				>{{\Carbon::parse($order->hard_due)->format('m/d/Y')}}</td>
+				>
+					{{\Carbon::parse($order->hard_due)->format('m/d/Y')}}
+				</td>
 				<td>
 					<form action="{{route('orders.update', $order->id)}}" method="POST">
 						<input type="hidden" name="_token" value="{{csrf_token()}}">

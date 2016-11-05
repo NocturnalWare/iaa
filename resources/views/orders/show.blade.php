@@ -2,5 +2,6 @@
 
 
 @section('content')
+
 	{{$order->name}}
 @stop

@@ -47,7 +47,7 @@ class SSActivewearStyle extends Model
 	 */
 	public function category()
 	{
-		return $this->belongsTo(SSActivewearCategory::class);
+		return $this->belongsToMany(SSActivewearCategory::class);
 	}
 	
 	

@@ -5,9 +5,10 @@
 	<div class="row">
 		<legend>
 			<h2>
-				{{$ss_brand->name}}
+				{{$ss_category->name}}
 			</h2>
 		</legend>
+
 		<div class="col-xs-12 col-md-11">
 			<div class="row">
 				{{$styles->render()}}

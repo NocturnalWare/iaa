@@ -102,7 +102,7 @@ class SSActivewearController extends Controller
 	 *
 	 * @return void
 	 */
-	public function buildBrandsTable()
+	public function index()
 	{
 		$brands = SSActivewearBrand::all();
 		$categories = SSActivewearCategory::all();
@@ -117,20 +117,9 @@ class SSActivewearController extends Controller
 	 */
 	public function getStyleByCategory(SSActivewearCategory $ss_category)
 	{
-		return $ss_category->styles;
+		$styles = $ss_category->styles()->paginate('10');
+		return view('products.ssactivewear.show-category', compact('ss_category', 'styles'));
 	}
-	
-	/**
-	 * Description
-	 *
-	 * @return void
-	 */
-	public function buildCategoryTable()
-	{
-		$cats = SSActivewearCategory::first();
-		return $cats->styles;
-	}
-	
 
 	/**
 	 * Description
@@ -139,7 +128,7 @@ class SSActivewearController extends Controller
 	 */
 	public function getProductsByBrand(SSActivewearBrand $ss_brand)
 	{
-		$styles = $ss_brand->styles()->with('products')->get();
+		$styles = $ss_brand->styles()->paginate('10');
 		return view('products.ssactivewear.show-brand', compact('styles', 'ss_brand'));
 	}
 

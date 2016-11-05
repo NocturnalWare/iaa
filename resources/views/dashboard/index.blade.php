@@ -14,7 +14,8 @@
 		</center>
 	</div>
 	<div class="col-xs-12 col-md-4 well">
-		<h3>New Orders</h3>
+		<h3>Current Order</h3>
+		{{$currentOrder}}
 	</div>
 	<div class="col-xs-12 col-md-4 well">
 		<h3>Something</h3>

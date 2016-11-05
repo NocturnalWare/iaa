@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Orders\Order;
+use App\Orders\CurrentOrder;
 use Illuminate\Support\Collection;
 
 class SetOrderCounts
@@ -46,7 +47,10 @@ class SetOrderCounts
             }
         };
 
+        $currentOrder = CurrentOrder::where('user_id', \Auth::user()->id)->first();
+
         view()->share([
+            'currentOrder' => $currentOrder,
             'neworders' => $orders['neworders'],
             'artorders' => $orders['artorders'],
             'productionorders' => $orders['productionorders'],
