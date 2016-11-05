@@ -24,7 +24,7 @@ class CreateOrderLinesTable extends Migration
             $table->integer('xlarge_qty');
             $table->integer('xxlarge_qty');
             $table->integer('xxxlarge_qty');
-            $table->integer('line_price');
+            $table->double('line_price');
             $table->timestamps();
         });
     }

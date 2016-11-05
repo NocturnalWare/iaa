@@ -44,6 +44,15 @@ class Order extends Model
     	return $this->hasMany(OrderUpdate::class);
     }
 
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function lines()
+    {
+    	return $this->hasMany(OrderLine::class);
+    }
     
     
 }
