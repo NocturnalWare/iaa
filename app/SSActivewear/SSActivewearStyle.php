@@ -5,6 +5,7 @@ namespace App\SSActivewear;
 use Illuminate\Database\Eloquent\Model;
 use App\SSActivewear\SSActivewearBrand;
 use App\SSActivewear\SSActivewearProduct;
+use App\SSActivewear\SSActivewearCategory;
 
 class SSActivewearStyle extends Model
 {
@@ -38,5 +39,16 @@ class SSActivewearStyle extends Model
 	{
 		return $this->hasMany(SSActivewearProduct::class, 'style_id', 'external_style_id');
 	}
+
+	/**
+	 * Description
+	 *
+	 * @return void
+	 */
+	public function category()
+	{
+		return $this->belongsTo(SSActivewearCategory::class);
+	}
+	
 	
 }

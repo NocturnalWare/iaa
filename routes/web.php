@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	Route::get('ssact/styles/rebuild', 'Integrations\SSActivewearController@buildStylesTable')->name('ssactivewear.styles.rebuild');
 	Route::get('ssact/brands/products/{ss_brand}', 'Integrations\SSActivewearController@getProductsByBrand')->name('ssactivewear.brand.productList');
 	Route::get('ssact/products/{ss_product}', 'Integrations\SSActivewearController@showProduct')->name('ssactivewear.products.show');
+	Route::get('ssact/buildCategoryTable', 'Integrations\SSActivewearController@buildCategoryTable')->name('ssactivewear.products.buildCategoryTable');
 
 	//COMPANY ROUTES
 	Route::get('/companies', 'Companies\CompanyController@index')->name('companies.index');

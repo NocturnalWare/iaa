@@ -9,6 +9,7 @@ use GuzzleHttp\Client;
 use App\SSActivewear\SSActivewearStyle;
 use App\SSActivewear\SSActivewearProduct;
 use App\SSActivewear\SSActivewearBrand;
+use App\SSActivewear\SSActivewearCategory;
 
 class SSActivewearController extends Controller
 {
@@ -52,7 +53,7 @@ class SSActivewearController extends Controller
 		$styles = SSActivewearStyle::whereIn('id', $id)->get();
 		$count = 0;
 		foreach($styles as $style){
-			$results = $client->get('http://api.ssactivewear.com/v2/products/?style='.$style->external_style_id, ['auth' => [43346, '4d93b818-4369-4906-ade7-03c3b296fc5f']]);
+			$results = $client->get('http://api.ssactivewear.com/v2/products/?style='.$style->external_style_id, ['auth' => config('app.ss_activewear')]);
 			$results = json_decode($results->getBody());
 
 			foreach($results as $result){
@@ -104,9 +105,32 @@ class SSActivewearController extends Controller
 	public function buildBrandsTable()
 	{
 		$brands = SSActivewearBrand::all();
+		$categories = SSActivewearCategory::all();
 
-		return view('products.ssactivewear.index', compact('brands'));
+		return view('products.ssactivewear.index', compact('categories', 'brands'));
 	}
+
+	/**
+	 * Description
+	 *
+	 * @return void
+	 */
+	public function getStyleByCategory(SSActivewearCategory $ss_category)
+	{
+		return $ss_category->styles;
+	}
+	
+	/**
+	 * Description
+	 *
+	 * @return void
+	 */
+	public function buildCategoryTable()
+	{
+		$cats = SSActivewearCategory::first();
+		return $cats->styles;
+	}
+	
 
 	/**
 	 * Description

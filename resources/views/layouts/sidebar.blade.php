@@ -49,6 +49,11 @@
 		Reports
 	</button>
 </a>
+<a href="{{route('ssactivewear.index')}}">
+	<button class="btn col-xs-12 btn-primary">
+		S&S Activewear Catalog
+	</button>
+</a>
 @if(\App\Utilities\Utility::findGod() === true)
 	<a href="{{route('users.index')}}">
 		<button class="btn col-xs-12 btn-primary">
