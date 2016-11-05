@@ -124,6 +124,10 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    //SSActivewear cred
+
+    'ss_activewear' => [env('SSACTIVEWEAR_USER', ''), env('SSACTIVEWEAR_KEY', '')],
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

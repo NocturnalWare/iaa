@@ -8,7 +8,7 @@
 		</tr>
 	</thead>
 	<tbody>
-	@foreach($company->orders()->where('status_id', \App\Orders\Order::COMPLETE)->get() as $order)
+		@foreach($company->orders()->where('status_id', \App\Orders\Order::COMPLETE)->get() as $order)
 			<tr>
 				<td>
 					<a href="{{route('orders.show', $order->id)}}">{{$order->name}}</a>
