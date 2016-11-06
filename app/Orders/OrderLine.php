@@ -3,7 +3,7 @@
 namespace App\Orders;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\SSActivewear\SSActivewearProduct;
 class OrderLine extends Model
 {
     //
@@ -26,6 +26,41 @@ class OrderLine extends Model
     public function linePrice()
     {
     	return;
+    }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function product()
+    {
+    	return $this->belongsTo(SSActivewearProduct::class);
+    }
+    
+    
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function otherSizes()
+    {
+    	$products = [];
+    	$otherLines = OrderLine::where('order_id', $this->order_id)->pluck('product_id');
+
+    	if(!empty($this->product_id)){
+    		$products = SSActivewearProduct::select('size_name')
+    			->distinct()
+    			->whereNotIn('id', $otherLines)
+	    		->where('brand_name', $this->product->brand_name)
+	    		->where('style_id', $this->product->style_id)
+	    		->where('color_code', $this->product->color_code)
+	    		->pluck('size_name')
+	    		->toArray();
+	   	}
+
+    	return $products;
     }
     
     

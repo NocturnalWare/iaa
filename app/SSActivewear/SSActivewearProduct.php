@@ -52,5 +52,18 @@ class SSActivewearProduct extends Model
     {
     	return $this->belongsTo(SSActivewearStyle::class, 'style_id', 'external_style_id');
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function buildLineText()
+    {
+    	$line = $this->brand_name.' '.$this->style_name.' '.$this->color_name.' '.$this->size_name;
+    	
+    	return;
+    }
+    
     
 }

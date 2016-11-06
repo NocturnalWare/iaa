@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	Route::get('/orders/create', 'Orders\OrdersController@create')->name('orders.create');
 	Route::put('/orders/{order}/update', 'Orders\OrdersController@update')->name('orders.update');
 	Route::post('/orders', 'Orders\OrdersController@store')->name('orders.store');
+	Route::get('/orders/product/add/{order}{product}{size}', 'Orders\OrdersController@addProductToOrder')->name('order.products.add');
 
 	//NEW
 	Route::get('neworders/orders', 'Orders\NewOrdersController@index')->name('neworders.index');

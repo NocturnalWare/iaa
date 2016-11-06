@@ -8,6 +8,7 @@ use App\Profiles\UserProfile;
 use App\Profiles\UserRole;
 use App\Profiles\Company;
 use App\Orders\OrderUpdate;
+use App\Orders\CurrentOrder;
 
 class User extends Authenticatable
 {
@@ -70,6 +71,16 @@ class User extends Authenticatable
     public function orderupdates()
     {
         return $this->hasMany(OrderUpdate::class);
+    }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function currentOrder()
+    {
+        return $this->hasOne(CurrentOrder::class);
     }
     
 }

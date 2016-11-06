@@ -16,15 +16,10 @@ class CreateOrderLinesTable extends Migration
         Schema::create('order_lines', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id');
+            $table->integer('product_id')->nullable();
             $table->text('line_text');
-            $table->integer('xsmall_qty');
-            $table->integer('small_qty');
-            $table->integer('medium_qty');
-            $table->integer('large_qty');
-            $table->integer('xlarge_qty');
-            $table->integer('xxlarge_qty');
-            $table->integer('xxxlarge_qty');
-            $table->double('line_price');
+            $table->integer('qty')->default(0);
+            $table->double('line_price')->nullable();
             $table->timestamps();
         });
     }

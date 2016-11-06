@@ -53,6 +53,16 @@ class Order extends Model
     {
     	return $this->hasMany(OrderLine::class);
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function currentorders()
+    {
+    	return $this->belongsToMany(CurrentOrder::class);
+    }
     
     
 }
