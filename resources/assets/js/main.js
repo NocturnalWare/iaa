@@ -12,6 +12,8 @@ window.moment = moment;
 
 import createOrder from './components/create-order.vue';
 import orderTable from './components/order-table.vue';
+import noteBlock from './components/note-block.vue';
+
 
 new Vue({
     el: '#inkaddict',
@@ -19,6 +21,7 @@ new Vue({
     components:{
     	createOrder,
     	orderTable,
+    	noteBlock,
     },
 
 });

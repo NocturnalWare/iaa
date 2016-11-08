@@ -25847,6 +25847,88 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
+var _vueMin = require('../vue.min.js');
+
+var _vueMin2 = _interopRequireDefault(_vueMin);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_vueMin2.default.use(require('../vue-resource.min.js'));
+
+exports.default = {
+    props: ['noteId'],
+    computed: {},
+    data: function data() {
+        return {
+            newComment: '',
+            user: {},
+            note: {}
+        };
+    },
+
+    methods: {
+        fixDate: function fixDate(date) {
+            return (0, _moment2.default)(date).format('M/D/Y h:M A');
+        },
+        updateComment: function updateComment(comment) {
+            var component = this;
+            var call = _vueMin2.default.http.post('updateComment', { orderComment: comment.id, comment: comment.comment, _token: window.Laravel.csrfToken });
+            call.then(function (response) {
+                comment.is_editing = false;
+            });
+        },
+        updateNote: function updateNote() {
+            var component = this;
+            var call = _vueMin2.default.http.post('updateNote', { note: this.noteId, message: this.note.message, subject: this.note.subject, _token: window.Laravel.csrfToken });
+            call.then(function (response) {
+                component.note.is_editing = false;
+            });
+        },
+        add: function add() {
+            var component = this;
+            var call = _vueMin2.default.http.post('addComment', { comment: this.newComment, orderNote: this.noteId, _token: window.Laravel.csrfToken });
+            call.then(function (response) {
+                component.note.comments.push(response.data);
+                console.log(component.note.comments);
+                component.newComment = '';
+            });
+        }
+    },
+    created: function created() {
+        var component = this;
+        var picknote = inkaddict.order.notes.filter(function (note) {
+            if (component.noteId == note.id) {
+                return true;
+            }
+        });
+        this.note = picknote[0];
+        this.user = inkaddict.user;
+    },
+    ready: function ready() {}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"well\" style=\"background-color: #fff\">\n    {{note.user.profile.first_name}}\n    {{note.user.profile.last_name}}\n    <button class=\"btn btn-xs btn-default pull-right\" @click=\"note.is_editing = !note.is_editing\">\n        <i class=\"fa fa-pencil-square\"></i>\n    </button>\n    <span class=\"pull-right\">{{fixDate(note.updated_at)}}</span>\n    <div class=\"col-xs-12\" v-if=\"!note.is_editing === true\">\n        <b>{{note.subject}}</b>\n        <br>\n        {{note.message}}\n    </div>\n    <div class=\"row\" v-if=\"note.is_editing === true\">\n        <input class=\"form-control\" v-model=\"note.subject\">\n        <textarea class=\"form-control\" v-model=\"note.message\"></textarea>\n        <button @click=\"updateNote\" class=\"btn btn-xs btn-success pull-right\">SAVE</button>\n    </div>\n    <div v-if=\"!note.is_editing === true\">\n        <div class=\"row\" v-if=\"note.comments.length > 0\">\n            <button class=\"btn btn-xs btn-info pull-right\" data-toggle=\"collapse\" data-target=\"#comments_{{note.id}}\">+{{note.comments.length}} Comment(s)</button>\n        </div>\n        <div class=\"row\" v-if=\"note.comments.length < 1\">\n            <div class=\"col-xs-12\">\n                <button class=\"btn btn-xs btn-info pull-right\" data-toggle=\"collapse\" data-target=\"#newComment_{{note.id}}\">New Comment</button><br>\n            </div>\n            <div id=\"newComment_{{note.id}}\" class=\"collapse\">\n                <span class=\"input-group\">\n                    <input class=\"form-control\" placeholder=\"New Comment...\" @keyup.enter=\"add\" v-model=\"newComment\">\n                    <span class=\"input-group-addon\"><button class=\"btn btn-xs btn-info\" @click=\"add\"><i class=\"fa fa-plus\"></i></button></span>\n                </span>\n            </div>\n        </div>\n        <div id=\"comments_{{note.id}}\" class=\"collapse\">\n            <hr>\n                <div class=\"row\" v-for=\"comment in note.comments\">\n                    <div class=\"col-xs-11 col-xs-offset-1\">\n                        <div class=\"row\">\n                            {{comment.user.profile.first_name}}\n                            {{comment.user.profile.last_name}}\n                            <span style=\"font-size: .7em\">\n                                {{fixDate(comment.updated_at)}}\n                            </span>\n                            <button v-if=\"comment.user.id === user.id\" class=\"btn btn-xs btn-default pull-right\" @click=\"comment.is_editing = !comment.is_editing\">\n                                <i class=\"fa fa-pencil-square\"></i>\n                            </button>\n                        </div>\n                        <br>\n                        <span v-if=\"!comment.is_editing === true\">{{comment.comment}}</span>\n                        <textarea class=\"form-control\" v-model=\"comment.comment\" @keyup.enter=\"updateComment(comment)\" v-if=\"comment.is_editing === true\"></textarea>\n                        <button class=\"btn btn-xs btn-info pull-right\" @click=\"updateComment(comment)\" v-if=\"comment.is_editing === true\">SAVE</button>\n                        <hr>\n                    </div>\n                </div>\n            <hr>\n            <span class=\"input-group\">\n                <input class=\"form-control\" placeholder=\"New Comment...\" @keyup.enter=\"add\" v-model=\"newComment\">\n                <span class=\"input-group-addon\"><button class=\"btn btn-xs btn-info\" @click=\"add\"><i class=\"fa fa-plus\"></i></button></span>\n            </span>\n        </div>\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-768b82bb", module.exports)
+  } else {
+    hotAPI.update("_v-768b82bb", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"../vue-resource.min.js":13,"../vue.min.js":15,"moment":1,"vue":4,"vue-hot-reload-api":3}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.default = {
     props: ['order'],
     computed: {},
@@ -25858,7 +25940,7 @@ exports.default = {
     ready: function ready() {}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table table-striped table-hover\">\n    <thead>\n        <tr>\n            <th>Line Text</th>\n            <th>Color</th>\n            <th>Size</th>\n            <th>Quantity</th>\n            <th></th>\n        </tr>\n    </thead>\n    <tbody>\n            <tr v-for=\"line in order.lines\">\n                <td>\n                    {{line.line_text}}\n                </td>   \n                <td>\n                    <i class=\"fa fa-square\" style=\"color: {{line.color_1}}\"></i>\n                    <i class=\"fa fa-square\" style=\"color: {{line.color_2}}\"></i>\n                    {{line.color_name}}\n                </td>   \n                <td>\n                    {{line.size}}\n                </td>\n                <td class=\"col-md-2\">\n                    <input name=\"quantity\" v-model=\"line.qty\" class=\"form-control\">\n                </td>\n                <td>\n                    <form action=\"{{route('order.products.destroy', $line.id)}}\" method=\"POST\">\n                        <input type=\"hidden\" name=\"_token\" value=\"{{csrf_token()}}\">\n                        <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                        <button class=\"btn btn-danger\">\n                            <i class=\"fa fa-trash\"></i>\n                        </button>\n                    </form>\n                </td>\n            </tr>\n    </tbody>\n</table>\n<div class=\"col-xs-12\">\n    <button class=\"btn btn-success pull-right\">\n        <i class=\"fa fa-check\"></i>\n        SAVE\n    </button>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table table-striped table-hover\">\n    <thead>\n        <tr>\n            <th>Line Text</th>\n            <th>Color</th>\n            <th>Size</th>\n            <th>Quantity</th>\n            <th></th>\n        </tr>\n    </thead>\n    <tbody>\n            <tr v-for=\"line in order.lines\">\n                <td>\n                    {{line.line_text}}\n                </td>   \n                <td>\n                    <i class=\"fa fa-square\" :style=\"{color: line.color_1}\"></i>\n                    <i class=\"fa fa-square\" :style=\"{color: line.color_2}\"></i>\n                    {{line.color_name}}\n                </td>   \n                <td>\n                    {{line.size}}\n                </td>\n                <td class=\"col-md-2\">\n                    <input name=\"quantity\" v-model=\"line.qty\" class=\"form-control\">\n                </td>\n                <td>\n                    <form action=\"route('order.products.destroy', $line.id)\" method=\"POST\">\n                        <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                        <button class=\"btn btn-danger\">\n                            <i class=\"fa fa-trash\"></i>\n                        </button>\n                    </form>\n                </td>\n            </tr>\n    </tbody>\n</table>\n<div class=\"col-xs-12\">\n    <button class=\"btn btn-success pull-right\">\n        <i class=\"fa fa-check\"></i>\n        SAVE\n    </button>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -25869,7 +25951,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-77be20d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":3}],9:[function(require,module,exports){
+},{"vue":4,"vue-hot-reload-api":3}],10:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -28153,7 +28235,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, b || (a.jQuery = a.$ = r), r;
 });
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var _createOrder = require('./components/create-order.vue');
@@ -28163,6 +28245,10 @@ var _createOrder2 = _interopRequireDefault(_createOrder);
 var _orderTable = require('./components/order-table.vue');
 
 var _orderTable2 = _interopRequireDefault(_orderTable);
+
+var _noteBlock = require('./components/note-block.vue');
+
+var _noteBlock2 = _interopRequireDefault(_noteBlock);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28182,12 +28268,13 @@ new Vue({
     data: {},
     components: {
         createOrder: _createOrder2.default,
-        orderTable: _orderTable2.default
+        orderTable: _orderTable2.default,
+        noteBlock: _noteBlock2.default
     }
 
 });
 
-},{"./components/create-order.vue":7,"./components/order-table.vue":8,"./jquery.min.js":9,"./vue-resource.min.js":12,"./vue-router.min.js":13,"moment":1,"vue/dist/vue.js":5}],11:[function(require,module,exports){
+},{"./components/create-order.vue":7,"./components/note-block.vue":8,"./components/order-table.vue":9,"./jquery.min.js":10,"./vue-resource.min.js":13,"./vue-router.min.js":14,"moment":1,"vue/dist/vue.js":5}],12:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -29688,7 +29775,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   a.version = "2.15.2", b(rb), a.fn = Se, a.min = tb, a.max = ub, a.now = Fe, a.utc = j, a.unix = Jc, a.months = Pc, a.isDate = f, a.locale = Za, a.invalid = n, a.duration = Nb, a.isMoment = r, a.weekdays = Rc, a.parseZone = Kc, a.localeData = ab, a.isDuration = wb, a.monthsShort = Qc, a.weekdaysMin = Tc, a.defineLocale = $a, a.updateLocale = _a, a.locales = bb, a.weekdaysShort = Sc, a.normalizeUnits = J, a.relativeTimeRounding = id, a.relativeTimeThreshold = jd, a.calendarFormat = Tb, a.prototype = Se;var nf = a;return nf;
 });
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -30153,7 +30240,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }), tt.actions = { get: { method: "GET" }, save: { method: "POST" }, query: { method: "GET" }, update: { method: "PUT" }, remove: { method: "DELETE" }, delete: { method: "DELETE" } }, "undefined" != typeof window && window.Vue && window.Vue.use(et), et;
 });
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -30690,7 +30777,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, Object.defineProperties(Tt.prototype, qt), Tt.install = m, Ot && window.Vue && window.Vue.use(Tt), Tt;
 });
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32716,6 +32803,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 
-},{}]},{},[10,9,14,11,13,6]);
+},{}]},{},[11,10,15,12,14,6]);
 
 //# sourceMappingURL=bundle.js.map

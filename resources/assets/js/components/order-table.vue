@@ -15,8 +15,8 @@
                         {{line.line_text}}
                     </td>   
                     <td>
-                        <i class="fa fa-square" style="color: {{line.color_1}}"></i>
-                        <i class="fa fa-square" style="color: {{line.color_2}}"></i>
+                        <i class="fa fa-square" :style="{color: line.color_1}"></i>
+                        <i class="fa fa-square" :style="{color: line.color_2}"></i>
                         {{line.color_name}}
                     </td>   
                     <td>
@@ -26,8 +26,7 @@
                         <input name="quantity" v-model="line.qty" class="form-control">
                     </td>
                     <td>
-                        <form action="{{route('order.products.destroy', $line.id)}}" method="POST">
-                            <input type="hidden" name="_token" value="{{csrf_token()}}">
+                        <form action="route('order.products.destroy', $line.id)" method="POST">
                             <input type="hidden" name="_method" value="DELETE">
                             <button class="btn btn-danger">
                                 <i class="fa fa-trash"></i>

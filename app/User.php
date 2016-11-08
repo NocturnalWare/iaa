@@ -32,6 +32,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $with = ['profile'];
+
 
     /**
      * Description

@@ -8,6 +8,9 @@ class OrderComment extends Model
 {
     protected $fillable = ['comment'];
 
+    protected $appends = ['is_editing'];
+
+    protected $with = ['user'];
 
     /**
      * Description
@@ -28,5 +31,16 @@ class OrderComment extends Model
     {
     	return $this->belongsTo(OrderMessage::class);
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function getIsEditingAttribute()
+    {
+    	return $this->attributes['is_editing'] = false;
+    }
+    
     
 }

@@ -24,6 +24,11 @@ class OrdersController extends Controller
      * @return void
      */
     public function show(Order $order)    {
+
+        \JavaScript::put([
+            'user' => \Auth::user(),
+            'order' => Order::find($order->id),
+        ]);
     	return view('orders.show', compact('order'));
     }
     

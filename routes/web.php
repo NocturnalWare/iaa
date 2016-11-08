@@ -43,6 +43,12 @@ Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	Route::put('/orders/{order}/update', 'Orders\OrdersController@update')->name('orders.update');
 	Route::post('/orders', 'Orders\OrdersController@store')->name('orders.store');
 
+	//ORDER NOTE ROUTES
+	Route::post('/orders/{order}/addComment', 'Orders\OrderCommentsController@store')->name('order.comments.store');
+	Route::post('/orders/{order}/updateComment', 'Orders\OrderCommentsController@update')->name('order.comments.update');
+	Route::post('/orders/{order}/addNote', 'Orders\OrderNotesController@store')->name('order.notes.store');
+	Route::post('/orders/{order}/updateNote', 'Orders\OrderNotesController@update')->name('order.notes.update');
+
 	//CURRENT ORDER
 	Route::get('/orders/current/{order}/setAsCurrentOrder', 'Orders\CurrentOrdersController@setAsCurrentOrder')->name('orders.current.set');
 

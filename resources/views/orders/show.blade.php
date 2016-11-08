@@ -62,42 +62,19 @@
 		<div class="col-xs-12 col-md-6" style="padding-top: 15px;">
 			<h3>
 				Notes
-				<button class="btn btn-xs btn-primary">ADD</button>
+				<button class="btn btn-xs btn-primary" data-toggle="collapse" data-target="#addNote">ADD</button>
 			</h3>
+			<div class="well collapse" style="background-color: #fff" id="addNote">
+				<form action="{{route('order.notes.store', $order->id)}}" method="POST">
+					<input type="hidden" name="_token" value="{{csrf_token()}}">
+					<input class="form-control" placeholder="Subject" name="subject">
+					<textarea class="form-control" placeholder="Note" name="message"></textarea>
+					<button class="btn btn-xs btn-success pull-right">SAVE</button>
+				</form>
+			</div>
 			<div class="well" style="background-color: #fff">
-				@foreach($order->notes()->limit(3)->orderBy('updated_at', 'asc')->get() as $note)
-					<div class="well" style="background-color: #fff">
-						{{$note->user->profile->first_name}}
-						{{$note->user->profile->last_name}}
-						<span class="pull-right">{{Carbon::parse($note->updated_at)->format('m/d/y h:i A')}}</span>
-						<br>
-						<b>{{$note->subject}}</b>
-						<br>
-						{{$note->message}}<br>
-							@if(count($note->comments) > 0)
-								<div class="row">
-									<button class="btn btn-xs btn-info pull-right" data-toggle="collapse" data-target="#comments_{{$note->id}}">+{{count($note->comments)}} Comment(s)</button>
-								</div>
-								<div id="comments_{{$note->id}}" class="collapse">
-									<hr />
-									@foreach($note->comments as $comment)
-										<div class="row">
-											<div class="col-xs-11 col-xs-offset-1">
-												{{$comment->user->profile->first_name}}
-												{{$comment->user->profile->last_name}} <span style="font-size: .7em">{{Carbon::parse($comment->updated_at)->format('m/d/y h:i A')}}</span>
-												<br>
-												{{$comment->comment}}
-											</div>
-										</div>
-									<hr />
-									@endforeach
-									<span class="input-group">
-										<input class="form-control" placeholder="New Comment...">
-										<span class="input-group-addon"><button class="btn btn-xs btn-info"><i class="fa fa-plus"></i></button></span>
-									</span>
-								</div>
-							@endif
-					</div>
+				@foreach($order->notes()->orderBy('updated_at', 'asc')->get() as $note)
+					<note-block note-id="{{$note->id}}"></note-block> 
 				@endforeach
 			</div>
 		@endif

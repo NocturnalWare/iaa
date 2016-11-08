@@ -11,6 +11,12 @@ class OrderNote extends Model
         'message',
     ];
 
+    protected $with = [
+    	'user',
+    	'comments',
+    ];
+
+    protected $appends = ['is_editing'];
 
     /**
      * Description
@@ -20,6 +26,16 @@ class OrderNote extends Model
     public function user()
     {
     	return $this->belongsTo(\App\User::class);
+    }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function getIsEditingAttribute()
+    {
+    	return $this->attributes['is_editing'] = false;
     }
 
     /**
