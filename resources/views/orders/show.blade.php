@@ -3,7 +3,18 @@
 
 @section('content')
 	<legend>
-		<h3>{{$order->company->name}}</h3>
+		<h2>
+			{{$order->company->name}}
+			<div class="col-md-6 col-xs-11 pull-right">
+				@if($order->id === $currentOrder->id)
+					<span class="bg-info">Current Order</span>
+				@else
+					<a href="{{route('orders.current.set', $order->id)}}">
+						<button class="btn btn-primary">MAKE CURRENT ORDER</button>
+					</a>
+				@endif
+			</div>
+		</h2>
 		<div class="col-xs-12 col-md-6">
 			<span class="input-group">
 				<label>Order Name</label>
@@ -11,6 +22,9 @@
 			</span>
 			<span class="input-group">
 				<label>Due</label>
+				@if(\Carbon::parse($order->hard_due)->format('y-m-d') < \Carbon::parse()->format('y-m-d'))
+					<span class="bg-warning text-danger pull-right" style="padding:6px;">Past Due</span>
+				@endif
 				<input type="date" value="{{\Carbon::parse($order->hard_due)->format('Y-m-d')}}" class="form-control" name="hard_due">
 			</span>
 		</div>
@@ -30,75 +44,61 @@
 	</legend>
 	<div class="col-xs-12 col-md-11" style="padding-top: 15px;">
 		<button class="btn btn-info">ADD MANUAL PRODUCT</button>
-		<a target="_blank" href="">
+		<a target="_blank" href="{{route('ssactivewear.index')}}">
 			<button class="btn btn-info">
 				ADD S&S PRODUCT 
 				<span style="font-size: .7em">(new tab)</span>
 			</button>
 		</a>
 		@if(count($order->lines) > 0)
-			<table class="table table-striped table-hover">
-				<thead>
-					<tr>
-						<th>Line Text</th>
-						<th>Sizes</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach($order->lines as $line)
-						<tr>
-							<td>
-								{{$line->line_text}}
-							</td>	
-							<td>
-								{{$line->otherSizes()[0]}}
-								@if(in_array('XS', $line->otherSizes()))
-			                    	<a href="{{route('order.products.add', [$order->id, $line->product, 'XS'])}}">
-		                        		<button class="btn" style="border-radius:25">XS</button>
-			                    	</a>
-		                        @endif
-								@if(in_array('S', $line->otherSizes()))
-			                    	<a href="{{route('order.products.add', [$order->id, $line->product, 'S'])}}">
-			                    		<button class="btn" style="border-radius:25">S</button>
-			                    	</a>
-		                        @endif
-								@if(!in_array('M', $line->otherSizes()))
-			                    	<a href="{{route('order.products.add', [$order->id, $line->product, 'M'])}}">
-			                    		<button class="btn" style="border-radius:25">M</button>
-			                    	</a>
-		                        @endif
-								@if(in_array('L', $line->otherSizes()))
-			                    	<a href="{{route('order.products.add', [$order->id, $line->product, 'L'])}}">
-			                    		<button class="btn" style="border-radius:25">L</button>
-			                    	</a>
-		                        @endif
-								@if(in_array('XL', $line->otherSizes()))
-			                    	<a href="{{route('order.products.add', [$order->id, $line->product, 'XL'])}}">
-			                    		<button class="btn" style="border-radius:25">XL</button>
-			                    	</a>
-		                        @endif
-								@if(in_array('2XL', $line->otherSizes()))
-			                    	<a href="{{route('order.products.add', [$order->id, $line->product, '2XL'])}}">
-			                    		<button class="btn" style="border-radius:25">2XL</button>
-			                    	</a>
-		                        @endif
-								@if(in_array('3XL', $line->otherSizes()))
-			                    	<a href="{{route('order.products.add', [$order->id, $line->product, '3XL'])}}">
-			                    		<button class="btn" style="border-radius:25">3XL</button>
-			                    	</a>
-		                        @endif
-							</td>	
-						</tr>
-					@endforeach
-				</tbody>
-			</table>
-			<button class="btn btn-success pull-right">
-				<i class="fa fa-check"></i>
-				SAVE
-			</button>
+			<order-table :order="{{$order}}"></order-table>
 		@else
 			<div class="well">
 				<h2>Order Not Started. Adds Products to Continue</h2>
+			</div>
+		@endif
+	</div>
+	@if(count($order->notes) > 0)
+		<div class="col-xs-12 col-md-6" style="padding-top: 15px;">
+			<h3>
+				Notes
+				<button class="btn btn-xs btn-primary">ADD</button>
+			</h3>
+			<div class="well" style="background-color: #fff">
+				@foreach($order->notes()->limit(3)->orderBy('updated_at', 'asc')->get() as $note)
+					<div class="well" style="background-color: #fff">
+						{{$note->user->profile->first_name}}
+						{{$note->user->profile->last_name}}
+						<span class="pull-right">{{Carbon::parse($note->updated_at)->format('m/d/y h:i A')}}</span>
+						<br>
+						<b>{{$note->subject}}</b>
+						<br>
+						{{$note->message}}<br>
+							@if(count($note->comments) > 0)
+								<div class="row">
+									<button class="btn btn-xs btn-info pull-right" data-toggle="collapse" data-target="#comments_{{$note->id}}">+{{count($note->comments)}} Comment(s)</button>
+								</div>
+								<div id="comments_{{$note->id}}" class="collapse">
+									<hr />
+									@foreach($note->comments as $comment)
+										<div class="row">
+											<div class="col-xs-11 col-xs-offset-1">
+												{{$comment->user->profile->first_name}}
+												{{$comment->user->profile->last_name}} <span style="font-size: .7em">{{Carbon::parse($comment->updated_at)->format('m/d/y h:i A')}}</span>
+												<br>
+												{{$comment->comment}}
+											</div>
+										</div>
+									<hr />
+									@endforeach
+									<span class="input-group">
+										<input class="form-control" placeholder="New Comment...">
+										<span class="input-group-addon"><button class="btn btn-xs btn-info"><i class="fa fa-plus"></i></button></span>
+									</span>
+								</div>
+							@endif
+					</div>
+				@endforeach
 			</div>
 		@endif
 	</div>

@@ -11,12 +11,14 @@ window.Vue = Vue;
 window.moment = moment;
 
 import createOrder from './components/create-order.vue';
+import orderTable from './components/order-table.vue';
 
 new Vue({
     el: '#inkaddict',
     data:{ },
     components:{
     	createOrder,
+    	orderTable,
     },
 
 });

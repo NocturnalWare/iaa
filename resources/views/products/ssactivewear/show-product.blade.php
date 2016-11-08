@@ -52,7 +52,9 @@
 					</div>
 				</div>
 				<div class="col-xs-12 col-md-11" style="padding-top:10px;padding-left:0px;">
-					<button class="btn btn-info">ADD TO CURRENT ORDER</button>
+                    	<a href="{{route('order.products.add', [$ss_product->id])}}">
+							<button class="btn btn-info">ADD TO CURRENT ORDER</button>
+                    	</a>
 					<button class="btn btn-info">CHOOSE ORDER</button>
 				</div>
 			</div>

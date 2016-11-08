@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class CurrentOrder extends Model
 {
+    protected $table = 'current_orders';
+
+    protected $fillable = ['order_id', 'user_id'];
     /**
      * Description
      *
@@ -23,7 +26,20 @@ class CurrentOrder extends Model
      */
     public function order()
     {
-    	return $this->belongsTo(Order::class, 'order_id', 'id');
+    	return $this->belongsTo(Order::class, 'order_id');
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public static function getCurrentOrder()
+    {
+    	$CurrentOrder = CurrentOrder::where('user_id', \Auth::user()->id)->first();
+
+    	return $CurrentOrder->order;
+    }
+    
     
 }

@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\SSActivewear\SSActivewearProduct;
 class OrderLine extends Model
 {
-    //
+    protected $fillable = [
+        'color_name',
+        'color_1',
+        'color_2',
+        'size',
+    ];
 
     /**
      * Description

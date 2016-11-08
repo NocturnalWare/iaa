@@ -1,89 +1,56 @@
 <template>
-    <div class="row">
-        <h2>Add Products</h2>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Style</th>
-                    <th>Sizes</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Line Text</th>
+                <th>Color</th>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr v-for="line in order.lines">
                     <td>
-                        <span class="input-group col-xs-11">
-                            <input class="form-control" v-model="searchQuery">
-                            <span class="input-group-addon">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </span>
+                        {{line.line_text}}
+                    </td>   
+                    <td>
+                        <i class="fa fa-square" style="color: {{line.color_1}}"></i>
+                        <i class="fa fa-square" style="color: {{line.color_2}}"></i>
+                        {{line.color_name}}
+                    </td>   
+                    <td>
+                        {{line.size}}
+                    </td>
+                    <td class="col-md-2">
+                        <input name="quantity" v-model="line.qty" class="form-control">
+                    </td>
+                    <td>
+                        <form action="{{route('order.products.destroy', $line.id)}}" method="POST">
+                            <input type="hidden" name="_token" value="{{csrf_token()}}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button class="btn btn-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
-                <tr v-for="product in products">
-                    <td>{{product.name}}</td>
-                    <td>{{product.style}}</td>
-                    <td>
-                        <button :class="['', product.sizes.xsmall ? 'btn-success' : 'btn-default']" class="btn" style="border-radius:25" @click="product.sizes.xsmall = !product.sizes.xsmall">XS</button>
-                        <button :class="['', product.sizes.small ? 'btn-success' : 'btn-default']" class="btn" style="border-radius:25" @click="product.sizes.small = !product.sizes.small">S</button>
-                        <button :class="['', product.sizes.medium ? 'btn-success' : 'btn-default']" class="btn" style="border-radius:25" @click="product.sizes.medium = !product.sizes.medium">M</button>
-                        <button :class="['', product.sizes.large ? 'btn-success' : 'btn-default']" class="btn" style="border-radius:25" @click="product.sizes.large = !product.sizes.large">L</button>
-                        <button :class="['', product.sizes.xlarge ? 'btn-success' : 'btn-default']" class="btn" style="border-radius:25" @click="product.sizes.xlarge = !product.sizes.xlarge">XL</button>
-                        <button :class="['', product.sizes.xxlarge ? 'btn-success' : 'btn-default']" class="btn" style="border-radius:25" @click="product.sizes.xxlarge = !product.sizes.xxlarge">XXL</button>
-                        <button :class="['', product.sizes.xxxlarge ? 'btn-success' : 'btn-default']" class="btn" style="border-radius:25" @click="product.sizes.xxxlarge = !product.sizes.xxxlarge">XXXL</button>
-                    </td>
-                    <td>${{product.price.toFixed(2)}}
-                </tr>
-            </tbody>
-        </table>
+        </tbody>
+    </table>
+    <div class="col-xs-12">
+        <button class="btn btn-success pull-right">
+            <i class="fa fa-check"></i>
+            SAVE
+        </button>
     </div>
 </template>
 
 <script>
     export default {
+        props: ['order'],
         computed: { },
         data(){
             return {
-                searchQuery: '',
-                products: [
-                    {name : 'Activewear Black', style : 'Tee', sizes : {
-                        xsmall : false,
-                        small : false,
-                        medium : false,
-                        large : false,
-                        xlarge : false,
-                        xxlarge : false,
-                        xxxlarge : false
-                    }, price : 4.39},
-                    {name : 'Activewear White', style : 'Tee', sizes : {
-                        xsmall : false,
-                        small : false,
-                        medium : false,
-                        large : false,
-                        xlarge : false,
-                        xxlarge : false,
-                        xxxlarge : false
-                    }, price : 1.39},
-                    {name : 'Activewear Grey', style : 'Tank', sizes : {
-                        xsmall : false,
-                        small : false,
-                        medium : false,
-                        large : false,
-                        xlarge : false,
-                        xxlarge : false,
-                        xxxlarge : false
-                    }, price : 4.39},
-                    {name : 'Activewear Red', style : 'Tank', sizes : {
-                        xsmall : false,
-                        small : false,
-                        medium : false,
-                        large : false,
-                        xlarge : false,
-                        xxlarge : false,
-                        xxxlarge : false
-                    }, price : 6.39},
-                ],
             };
         },
         methods: {},

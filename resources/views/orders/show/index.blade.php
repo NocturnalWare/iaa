@@ -6,7 +6,7 @@
 		<table class="table table-striped">
 			@foreach($orders as $order)
 				<tr>
-					<td>{{$order->name}}</td>
+					<td><a href="{{route('orders.show', $order->id)}}">{{$order->name}}</a></td>
 					<td>{{$order->company->name}}</td>
 				</tr>
 			@endforeach

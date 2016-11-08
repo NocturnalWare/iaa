@@ -18,6 +18,10 @@ class CreateOrderLinesTable extends Migration
             $table->integer('order_id');
             $table->integer('product_id')->nullable();
             $table->text('line_text');
+            $table->string('color_name');
+            $table->string('color_1');
+            $table->string('color_2');
+            $table->string('size');
             $table->integer('qty')->default(0);
             $table->double('line_price')->nullable();
             $table->timestamps();

@@ -60,9 +60,9 @@ class SSActivewearProduct extends Model
      */
     public function buildLineText()
     {
-    	$line = $this->brand_name.' '.$this->style_name.' '.$this->color_name.' '.$this->size_name;
+    	$line = $this->brand_name.' '.$this->style_name;
     	
-    	return;
+    	return $line;
     }
     
     

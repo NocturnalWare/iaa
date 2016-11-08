@@ -25842,6 +25842,34 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":4,"vue-hot-reload-api":3}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['order'],
+    computed: {},
+    data: function data() {
+        return {};
+    },
+
+    methods: {},
+    ready: function ready() {}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<table class=\"table table-striped table-hover\">\n    <thead>\n        <tr>\n            <th>Line Text</th>\n            <th>Color</th>\n            <th>Size</th>\n            <th>Quantity</th>\n            <th></th>\n        </tr>\n    </thead>\n    <tbody>\n            <tr v-for=\"line in order.lines\">\n                <td>\n                    {{line.line_text}}\n                </td>   \n                <td>\n                    <i class=\"fa fa-square\" style=\"color: {{line.color_1}}\"></i>\n                    <i class=\"fa fa-square\" style=\"color: {{line.color_2}}\"></i>\n                    {{line.color_name}}\n                </td>   \n                <td>\n                    {{line.size}}\n                </td>\n                <td class=\"col-md-2\">\n                    <input name=\"quantity\" v-model=\"line.qty\" class=\"form-control\">\n                </td>\n                <td>\n                    <form action=\"{{route('order.products.destroy', $line.id)}}\" method=\"POST\">\n                        <input type=\"hidden\" name=\"_token\" value=\"{{csrf_token()}}\">\n                        <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                        <button class=\"btn btn-danger\">\n                            <i class=\"fa fa-trash\"></i>\n                        </button>\n                    </form>\n                </td>\n            </tr>\n    </tbody>\n</table>\n<div class=\"col-xs-12\">\n    <button class=\"btn btn-success pull-right\">\n        <i class=\"fa fa-check\"></i>\n        SAVE\n    </button>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-77be20d4", module.exports)
+  } else {
+    hotAPI.update("_v-77be20d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":4,"vue-hot-reload-api":3}],9:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -28125,12 +28153,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, b || (a.jQuery = a.$ = r), r;
 });
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 var _createOrder = require('./components/create-order.vue');
 
 var _createOrder2 = _interopRequireDefault(_createOrder);
+
+var _orderTable = require('./components/order-table.vue');
+
+var _orderTable2 = _interopRequireDefault(_orderTable);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28149,12 +28181,13 @@ new Vue({
     el: '#inkaddict',
     data: {},
     components: {
-        createOrder: _createOrder2.default
+        createOrder: _createOrder2.default,
+        orderTable: _orderTable2.default
     }
 
 });
 
-},{"./components/create-order.vue":7,"./jquery.min.js":8,"./vue-resource.min.js":11,"./vue-router.min.js":12,"moment":1,"vue/dist/vue.js":5}],10:[function(require,module,exports){
+},{"./components/create-order.vue":7,"./components/order-table.vue":8,"./jquery.min.js":9,"./vue-resource.min.js":12,"./vue-router.min.js":13,"moment":1,"vue/dist/vue.js":5}],11:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -29655,7 +29688,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   a.version = "2.15.2", b(rb), a.fn = Se, a.min = tb, a.max = ub, a.now = Fe, a.utc = j, a.unix = Jc, a.months = Pc, a.isDate = f, a.locale = Za, a.invalid = n, a.duration = Nb, a.isMoment = r, a.weekdays = Rc, a.parseZone = Kc, a.localeData = ab, a.isDuration = wb, a.monthsShort = Qc, a.weekdaysMin = Tc, a.defineLocale = $a, a.updateLocale = _a, a.locales = bb, a.weekdaysShort = Sc, a.normalizeUnits = J, a.relativeTimeRounding = id, a.relativeTimeThreshold = jd, a.calendarFormat = Tb, a.prototype = Se;var nf = a;return nf;
 });
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -30120,7 +30153,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }), tt.actions = { get: { method: "GET" }, save: { method: "POST" }, query: { method: "GET" }, update: { method: "PUT" }, remove: { method: "DELETE" }, delete: { method: "DELETE" } }, "undefined" != typeof window && window.Vue && window.Vue.use(et), et;
 });
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -30657,7 +30690,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, Object.defineProperties(Tt.prototype, qt), Tt.install = m, Ot && window.Vue && window.Vue.use(Tt), Tt;
 });
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32683,6 +32716,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 
-},{}]},{},[9,8,13,10,12,6]);
+},{}]},{},[10,9,14,11,13,6]);
 
 //# sourceMappingURL=bundle.js.map

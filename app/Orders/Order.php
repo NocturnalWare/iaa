@@ -63,6 +63,15 @@ class Order extends Model
     {
     	return $this->belongsToMany(CurrentOrder::class);
     }
-    
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function notes()
+    {
+        return $this->hasMany(OrderNote::class);
+    }
     
 }

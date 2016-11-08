@@ -50,7 +50,7 @@ class SetOrderCounts
         $currentOrder = CurrentOrder::where('user_id', \Auth::user()->id)->first();
 
         view()->share([
-            'currentOrder' => $currentOrder,
+            'currentOrder' => $currentOrder->order()->with('lines', 'company')->first(),
             'neworders' => $orders['neworders'],
             'artorders' => $orders['artorders'],
             'productionorders' => $orders['productionorders'],

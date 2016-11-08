@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Orders\Order;
+use App\Orders\CurrentOrder;
 use App\Orders\OrderUpdate;
 use App\Orders\OrderStatus;
 use App\Orders\OrderLine;
@@ -67,21 +68,30 @@ class OrdersController extends Controller
      *
      * @return void
      */
-    public function addProductToOrder(Order $order, SSActivewearProduct $product, $size)
+    public function addProductToOrder(SSActivewearProduct $product)
     {
+    	$currentOrder = CurrentOrder::getCurrentOrder();
     	$newOrder = new OrderLine;
-    	$foundProduct = SSActivewearProduct::where('id', '!=', $product->id)
-    		->where('style_id', $product->style_id)
-    		->where('brand_name', $product->brand_name)
-    		->where('size_name', $size)
-    		->where('color_code', $product->color_code)
-    		->first();
+    	$newOrder->order()->associate($currentOrder);
+    	$newOrder->product()->associate($product);
+    	$newOrder->line_text = $product->buildLineText();
+        $newOrder->size = $product->size_name;
+        $newOrder->color_name = $product->color_name;
+        $newOrder->color_1 = $product->color_1;
+        $newOrder->color_2 = $product->color_2;
+        $newOrder->save();
 
-    	$newOrder->order()->associate($order);
-    	$newOrder->product()->associate($foundProduct);
-    	$newOrder->line_text = $product->style->title;
-    	$newOrder->save();
-
+    	return redirect()->back();
+    }
+    
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function destroyLine(OrderLine $order_line)
+    {	
+    	$order_line->delete();
     	return redirect()->back();
     }
     

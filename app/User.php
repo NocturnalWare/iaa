@@ -80,7 +80,7 @@ class User extends Authenticatable
      */
     public function currentOrder()
     {
-        return $this->hasOne(CurrentOrder::class);
+        return $this->hasOne(CurrentOrder::class, 'user_id');
     }
     
 }
