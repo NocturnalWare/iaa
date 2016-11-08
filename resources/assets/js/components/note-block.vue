@@ -2,12 +2,12 @@
     <div class="well" style="background-color: #fff">
         {{note.user.profile.first_name}}
         {{note.user.profile.last_name}}
-        <button class="btn btn-xs btn-default pull-right" @click="note.is_editing = !note.is_editing">
-            <i class="fa fa-pencil-square"></i>
-        </button>
         <span class="pull-right">{{fixDate(note.updated_at)}}</span>
         <div class="col-xs-12" v-if="!note.is_editing === true">
             <b>{{note.subject}}</b>
+            <span style="font-size:.8em;cursor:pointer" class="text-info" v-if="note.user.id === user.id" @click="note.is_editing = !note.is_editing">
+                Edit
+            </span>
             <br>
             {{note.message}}
         </div>
@@ -41,9 +41,7 @@
                                 <span style="font-size: .7em" style="pull-right">
                                     {{fixDate(comment.updated_at)}}
                                 </span>
-                                <button v-if="comment.user.id === user.id" class="btn btn-xs btn-default pull-right" @click="comment.is_editing = !comment.is_editing">
-                                    <i class="fa fa-pencil-square"></i>
-                                </button>
+                                <span v-if="comment.user.id === user.id" style="cursor:pointer;font-size:.8em" class="text-info" @click="comment.is_editing = !comment.is_editing">Edit</span>
                             </div>
                             <br>
                             <span v-if="!comment.is_editing === true">{{comment.comment}}</span>
@@ -53,7 +51,7 @@
                         </div>
                     </div>
                 <hr />
-                <span class="input-group">
+                <span class="input-group" v-if="!comment.is_editing === true">
                     <input class="form-control" placeholder="New Comment..." @keyup.enter="add" v-model="newComment">
                     <span class="input-group-addon"><button class="btn btn-xs btn-info" @click="add"><i class="fa fa-plus"></i></button></span>
                 </span>

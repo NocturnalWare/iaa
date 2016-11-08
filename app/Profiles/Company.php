@@ -13,6 +13,9 @@ class Company extends Model
 		'name',
 		'industry'
 	];
+    
+    protected $with = ['profile'];
+    
     /**
      * Description
      *

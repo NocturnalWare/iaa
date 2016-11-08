@@ -59,7 +59,7 @@ class SetOrderCounts
             'deliveredorders' => $orders['deliveredorders'],
         ]);
 
-        \JavaScript::put(['neworders' => $orders, 'orders' => $orders]);
+        \JavaScript::put(['neworders' => $orders, 'orders' => $orders, 'currentOrder' => $currentOrder->order]);
 
 
         return $next($request);
