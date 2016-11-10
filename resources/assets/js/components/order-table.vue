@@ -37,7 +37,7 @@
         </legend>
         <div class="col-xs-12 col-md-11" style="padding-top: 15px;">
             <button class="btn btn-info">ADD MANUAL PRODUCT</button>
-            <a target="_blank" href="{{route('ssactivewear.index')}}">
+            <a target="_blank" href="route('ssactivewear.index')">
                 <button class="btn btn-info">
                     ADD S&S PRODUCT 
                     <span style="font-size: .7em">(new tab)</span>
