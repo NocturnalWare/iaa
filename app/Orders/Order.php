@@ -52,7 +52,7 @@ class Order extends Model
      */
     public function lines()
     {
-    	return $this->hasMany(OrderLine::class)->orderBy('created_at', 'desc');
+    	return $this->hasMany(OrderLine::class);
     }
 
     /**
@@ -72,7 +72,7 @@ class Order extends Model
      */
     public function notes()
     {
-        return $this->hasMany(OrderNote::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(OrderNote::class);
     }
     
 }

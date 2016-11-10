@@ -5,7 +5,7 @@
                 {{order.company.name}}
                 <div class="col-md-6 col-xs-11 pull-right">
                     <span v-if="isCurrentOrder" class="bg-info">Current Order</span>
-                    <a v-if="!isCurrentOrder" href="route('orders.current.set', order.id)">
+                    <a v-if="!isCurrentOrder">
                         <button class="btn btn-primary">MAKE CURRENT ORDER</button>
                     </a>
                 </div>
@@ -37,7 +37,7 @@
         </legend>
         <div class="col-xs-12 col-md-11" style="padding-top: 15px;">
             <button class="btn btn-info">ADD MANUAL PRODUCT</button>
-            <a target="_blank" href="route('ssactivewear.index')">
+            <a target="_blank">
                 <button class="btn btn-info">
                     ADD S&S PRODUCT 
                     <span style="font-size: .7em">(new tab)</span>
