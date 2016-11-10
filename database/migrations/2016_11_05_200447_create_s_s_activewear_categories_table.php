@@ -15,6 +15,7 @@ class CreateSSActivewearCategoriesTable extends Migration
     {
         Schema::create('s_s_activewear_categories', function (Blueprint $table) {
             $table->increments('id');
+            $table->text('image_url');
             $table->string('name');
             $table->timestamps();
         });

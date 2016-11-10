@@ -20,6 +20,8 @@ class CreateSsactivewearProductsTable extends Migration
             $table->string('external_skuID_Master');
             $table->string('your_sku');
             $table->string('brand_name');
+            $table->string('brand_id');
+            $table->string('category_id');
             $table->string('style_name');
             $table->string('color_name');
             $table->string('color_code');
