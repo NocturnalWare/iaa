@@ -11,6 +11,7 @@ use App\Orders\CurrentOrder;
 use App\Orders\OrderUpdate;
 use App\Orders\OrderStatus;
 use App\Orders\OrderLine;
+use App\Orders\OrderBase;
 use App\Profiles\Company;
 use App\SSActivewear\SSActivewearProduct;
 use App\SSActivewear\SSActivewearBase;
@@ -80,18 +81,23 @@ class OrdersController extends Controller
      *
      * @return void
      */
-    public function addProductToOrder(SSActivewearProduct $product)
+    public function addProductToOrder(SSActivewearBase $base)
     {
-    	$currentOrder = CurrentOrder::getCurrentOrder();
-    	$newOrder = new OrderLine;
+
+        $currentOrder = CurrentOrder::getCurrentOrder();
+        $newOrder = new OrderBase;
     	$newOrder->order()->associate($currentOrder);
-    	$newOrder->product()->associate($product);
-    	$newOrder->line_text = $product->buildLineText();
-        $newOrder->size = $product->size_name;
-        $newOrder->color_name = $product->color_name;
-        $newOrder->color_1 = $product->color_1;
-        $newOrder->color_2 = $product->color_2;
+        $newOrder->base()->associate($base);
         $newOrder->save();
+        // $currentOrder = CurrentOrder::getCurrentOrder();
+        // $newOrder = new OrderLine;
+    	// $newOrder->product()->associate($product);
+    	// $newOrder->line_text = $product->buildLineText();
+     //    $newOrder->size = $product->size_name;
+     //    $newOrder->color_name = $product->color_name;
+     //    $newOrder->color_1 = $product->color_1;
+     //    $newOrder->color_2 = $product->color_2;
+     //    $newOrder->save();
 
     	return redirect()->back();
     }

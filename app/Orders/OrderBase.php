@@ -27,7 +27,7 @@ class OrderBase extends Model
      */
     public function base()
     {
-    	return $this->hasOne(SSActivewearBase::class, 'id', 'base_id');
+    	return $this->belongsTo(SSActivewearBase::class, 'base_id', 'id');
     }
     
 }

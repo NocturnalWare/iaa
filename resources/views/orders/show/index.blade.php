@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-
+			<a href="{{route('orders.create')}}">
+				<button class="btn btn-primary">NEW ORDER</button>
+			</a>
 	<div class="row">
 		<table class="table table-striped">
 			@foreach($orders as $order)

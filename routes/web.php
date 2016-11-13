@@ -53,7 +53,7 @@ Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	Route::get('/orders/{order}/current/setAsCurrentOrder', 'Orders\CurrentOrdersController@setAsCurrentOrder')->name('orders.current.set');
 
 	//ORDER PRODUCTS
-	Route::get('/orders/product/add/{product}', 'Orders\OrdersController@addProductToOrder')->name('order.products.add');
+	Route::get('/orders/product/add/{base}', 'Orders\OrdersController@addProductToOrder')->name('order.products.add');
 	Route::delete('/orders/product/destroy/{order_line}', 'Orders\OrdersController@destroyLine')->name('order.products.destroy');
 
 	//NEW

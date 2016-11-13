@@ -42,7 +42,7 @@ class SSActivewearBase extends Model
      */
     public function base()
     {
-    	return $this->belongsTo(OrderBase::class, 'base_id', 'id');
+    	return $this->hasMany(OrderBase::class, 'base_id', 'id');
     }
     
 }
