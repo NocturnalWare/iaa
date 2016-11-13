@@ -13,6 +13,7 @@ use App\Orders\OrderStatus;
 use App\Orders\OrderLine;
 use App\Profiles\Company;
 use App\SSActivewear\SSActivewearProduct;
+use App\SSActivewear\SSActivewearBase;
 use App\Utilities\Utility;
 
 class OrdersController extends Controller
@@ -23,11 +24,17 @@ class OrdersController extends Controller
      *
      * @return void
      */
-    public function show(Order $order)    {
+    public function show(Order $order)
+    {
+        // foreach($search->index as $product){
+        //     if($search->color_name == $product->base->color_name){
+        //         $sizes[] = $product;
+        //     }
+        // };
 
         \JavaScript::put([
             'user' => \Auth::user(),
-            'order' => Order::find($order->id),
+            'order' => $order,
         ]);
     	return view('orders.show', compact('order'));
     }

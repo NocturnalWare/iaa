@@ -50,7 +50,7 @@ Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	Route::post('/orders/{order}/updateNote', 'Orders\OrderNotesController@update')->name('order.notes.update');
 
 	//CURRENT ORDER
-	Route::get('/orders/current/{order}/setAsCurrentOrder', 'Orders\CurrentOrdersController@setAsCurrentOrder')->name('orders.current.set');
+	Route::get('/orders/{order}/current/setAsCurrentOrder', 'Orders\CurrentOrdersController@setAsCurrentOrder')->name('orders.current.set');
 
 	//ORDER PRODUCTS
 	Route::get('/orders/product/add/{product}', 'Orders\OrdersController@addProductToOrder')->name('order.products.add');

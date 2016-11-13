@@ -44,14 +44,14 @@
                                 <span v-if="comment.user.id === user.id" style="cursor:pointer;font-size:.8em" class="text-info" @click="comment.is_editing = !comment.is_editing">Edit</span>
                             </div>
                             <br>
-                            <span v-if="!comment.is_editing === true">{{comment.comment}}</span>
-                            <textarea class="form-control" v-model="comment.comment" @keyup.enter="updateComment(comment)" v-if="comment.is_editing === true"></textarea>
-                            <button class="btn btn-xs btn-info pull-right" @click="updateComment(comment)" v-if="comment.is_editing === true">SAVE</button>
+                            <span v-if="comment && !comment.is_editing === true">{{comment.comment}}</span>
+                            <textarea class="form-control" v-model="comment.comment" @keyup.enter="updateComment(comment)" v-if="comment && comment.is_editing === true"></textarea>
+                            <button class="btn btn-xs btn-info pull-right" @click="updateComment(comment)" v-if="comment && comment.is_editing === true">SAVE</button>
                             <hr />
                         </div>
                     </div>
                 <hr />
-                <span class="input-group" v-if="!comment.is_editing === true">
+                <span class="input-group" v-if="comment && !comment.is_editing === true">
                     <input class="form-control" placeholder="New Comment..." @keyup.enter="add" v-model="newComment">
                     <span class="input-group-addon"><button class="btn btn-xs btn-info" @click="add"><i class="fa fa-plus"></i></button></span>
                 </span>

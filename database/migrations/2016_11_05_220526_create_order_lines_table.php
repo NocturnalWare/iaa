@@ -23,6 +23,7 @@ class CreateOrderLinesTable extends Migration
             $table->string('color_2');
             $table->string('size');
             $table->integer('qty')->default(0);
+            $table->integer('margin')->default(40);
             $table->double('line_price')->nullable();
             $table->timestamps();
         });

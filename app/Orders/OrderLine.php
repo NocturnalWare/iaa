@@ -13,6 +13,7 @@ class OrderLine extends Model
         'size',
     ];
 
+    protected $with = ['product'];
     /**
      * Description
      *

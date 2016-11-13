@@ -13,7 +13,7 @@ class Order extends Model
     const COMPLETE = 4;
     const SHIPPED = 5;
     const DELIVERED = 6;
-    protected $with = ['notes', 'company', 'lines'];
+    protected $with = ['notes', 'company', 'lines', 'bases'];
 
     /**
      * Description
@@ -52,7 +52,17 @@ class Order extends Model
      */
     public function lines()
     {
-    	return $this->hasMany(OrderLine::class);
+        return $this->hasMany(OrderLine::class);
+    }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function bases()
+    {
+    	return $this->hasMany(OrderBase::class);
     }
 
     /**

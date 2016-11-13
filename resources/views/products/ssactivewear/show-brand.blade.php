@@ -30,17 +30,14 @@
 							</td>
 							<td>{!! html_entity_decode($style->description) !!}</td>
 							<td>
-							<button data-toggle="collapse" data-target="#style_{{$style->id}}">Show <span class="badge">{{count($style->products)}}</span></button>
+							<button data-toggle="collapse" data-target="#style_{{$style->id}}">Show <span class="badge">{{count($style->base)}}</span></button>
 							<div id="style_{{$style->id}}" class="collapse">
-								@foreach($style->products as $product)
+								@foreach($style->base as $product)
 								<div class="well well-sm">
-									{{$product->size_name}}
-									<i class="fa fa-square" style="color: {{$product->color_1}}"></i>
-									<i class="fa fa-square" style="color: {{$product->color_2}}"></i>
-									{{$product->color_name}} : {{$product->customer_price}}
-									<a href="{{route('ssactivewear.products.show', $product->id)}}">
+									{{$product->color_name}}
+                    				<a href="{{route('order.products.add', [$product->id])}}">
 										<button class="btn btn-xs">
-											VIEW
+											ADD TO CURRENT ORDER
 										</button>
 									</a>
 								</div>

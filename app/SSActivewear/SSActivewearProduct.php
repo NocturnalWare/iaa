@@ -65,5 +65,14 @@ class SSActivewearProduct extends Model
     	return $line;
     }
     
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function index()
+    {
+        return $this->hasOne(SSActivewearIndex::class, 'product_id', 'id');
+    }
     
 }

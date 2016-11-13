@@ -10,6 +10,8 @@ use App\SSActivewear\SSActivewearStyle;
 use App\SSActivewear\SSActivewearProduct;
 use App\SSActivewear\SSActivewearBrand;
 use App\SSActivewear\SSActivewearCategory;
+use App\SSActivewear\SSActivewearIndex;
+use App\SSActivewear\SSActivewearBase;
 
 class SSActivewearController extends Controller
 {
@@ -104,6 +106,43 @@ class SSActivewearController extends Controller
 	 */
 	public function index()
 	{
+
+
+		// $not = SSActivewearIndex::select('base_id')->distinct()->pluck('base_id');
+		// $list = SSActivewearBase::whereNotIn('id', $not)->limit(2500)->get();
+		// foreach($list as $get){
+		// 	$products = SSActivewearProduct::where('brand_id', $get->brand_id)
+		// 		->where('style_id', $get->style_id)
+		// 		->where('color_name', $get->color_name)
+		// 		->get();
+		// 	foreach($products as $product){
+		// 		$new = [];
+		// 		$new['base_id'] = $get->id;
+		// 		$new['product_id'] = $product->id;
+		// 		$new['size_name'] = $product->size_name;
+		// 		$new['color_name'] = $product->color_name;
+		// 		SSActivewearIndex::create($new);
+		// 	}
+		// }
+		
+		// return count(SSActivewearIndex::select('base_id')->distinct()->get());
+
+
+		// 		$new['brand_id'] = $get->brand_id;
+		// 		$new['color_name'] = $get->color_name;
+		// 		SSActivewearBase::create($new);
+		// 	// return SSActivewearBase::all();
+		// 		$new = [];
+		// 		$new['product_name'] = $product->brand_name.' '.$product->style_name;
+		// 		$new['style_id'] = $product->style_id;
+		// 		$new['brand_id'] = $product->brand_id;
+		// 		$new['color_name'] = $product->color_name;
+		// 		SSActivewearBase::create($new);
+		// 	// }
+		// // }
+
+		// return SSActivewearBase::all();
+
 		$brands = SSActivewearBrand::all();
 		$categories = SSActivewearCategory::all();
 
@@ -128,7 +167,7 @@ class SSActivewearController extends Controller
 	 */
 	public function getProductsByBrand(SSActivewearBrand $ss_brand)
 	{
-		$styles = $ss_brand->styles()->paginate('10');
+		$styles = $ss_brand->styles()->with('base')->paginate('10');
 		return view('products.ssactivewear.show-brand', compact('styles', 'ss_brand'));
 	}
 

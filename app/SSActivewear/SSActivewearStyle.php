@@ -20,6 +20,8 @@ class SSActivewearStyle extends Model
 		'style_image',
 	];
 
+	protected $with = ['brand'];
+
 	/**
 	 * Description
 	 *
@@ -35,9 +37,9 @@ class SSActivewearStyle extends Model
 	 *
 	 * @return void
 	 */
-	public function products()
+	public function base()
 	{
-		return $this->hasMany(SSActivewearProduct::class, 'style_id', 'external_style_id');
+		return $this->hasMany(SSActivewearBase::class, 'style_id', 'external_style_id');
 	}
 
 	/**

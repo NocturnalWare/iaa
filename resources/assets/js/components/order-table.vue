@@ -5,7 +5,7 @@
                 {{order.company.name}}
                 <div class="col-md-6 col-xs-11 pull-right">
                     <span v-if="isCurrentOrder" class="bg-info">Current Order</span>
-                    <a v-if="!isCurrentOrder">
+                    <a v-if="!isCurrentOrder" href="current/setAsCurrentOrder">
                         <button class="btn btn-primary">MAKE CURRENT ORDER</button>
                     </a>
                 </div>
@@ -36,51 +36,82 @@
             </div>
         </legend>
         <div class="col-xs-12 col-md-11" style="padding-top: 15px;">
-            <button class="btn btn-info">ADD MANUAL PRODUCT</button>
+            <button class="btn btn-info" @click="addingManual = !addingManual">ADD MANUAL PRODUCT</button>
             <a target="_blank">
                 <button class="btn btn-info">
                     ADD S&S PRODUCT 
                     <span style="font-size: .7em">(new tab)</span>
                 </button>
             </a>
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Line Text</th>
-                    <th>Color</th>
-                    <th>Size</th>
-                    <th>Quantity</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="line in order.lines">
-                    <td>
-                        {{line.line_text}}
-                    </td>   
-                    <td>
-                        <i class="fa fa-square" :style="{color: line.color_1}"></i>
-                        <i class="fa fa-square" :style="{color: line.color_2}"></i>
-                        {{line.color_name}}
-                    </td>   
-                    <td>
-                        {{line.size}}
-                    </td>
-                    <td class="col-md-2">
-                        <input name="quantity" v-model="line.qty" class="form-control">
-                    </td>
-                    <td>
-                        <form action="route('order.products.destroy', $line.id)" method="POST">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button class="btn btn-danger">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="col-xs-12">
+
+        <div class="row">
+            <div v-for="base in order.bases">
+                <div class="col-xs-12">
+                    <h3>
+                        {{base.base.style.brand.name}} {{base.base.style.style_name}} {{base.base.style.title}}
+                        <span style="font-size:.6em">{{base.base.color_name}}</span>
+                    </h3>
+                    <div class="col-xs-12 col-md-3">
+                        <img style="height:300px;" class="img-responsive" :src="imgUrl(base.base.style)">
+                    </div>
+                    <div class="col-xs-12 col-md-8">
+                        <div class="row" style="border-bottom:1px solid #ddd;margin-bottom:6px">
+                            <div class="col-xs-2">
+                                <label>Size</label>
+                            </div>
+                            <div class="col-xs-2">
+                                <label>Price</label>
+                            </div>
+                            <div class="col-xs-2">
+                                <label>Margin</label>
+                            </div>
+                            <div class="col-xs-2">
+                                <label>Sale Price</label>
+                            </div>
+                            <div class="col-xs-2">
+                                <label>Qty</label>
+                            </div>
+                            <div class="col-xs-1">
+                                <label>Total</label>
+                            </div>
+                        </div>
+                        <div v-for="index in base.base.index">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    {{index.size_name}}
+                                </div>
+                                <div class="col-xs-2">
+                                    {{index.product.customer_price}}
+                                </div>
+                                <div class="col-xs-2">
+                                    <span class="input-group">
+                                        <input type="range" min="20" max="100" v-model='index.margin'>
+                                        <span class="input-group-addon">{{index.margin}}%</span>
+                                    </span>
+                                </div>
+                                <div class="col-xs-2">
+                                    ${{unitPrice(index)}}
+                                </div>
+                                <div class="col-xs-2">
+                                    <input class="form-control" v-model="index.qty">    
+                                </div>
+                                <div class="col-xs-1">
+                                    <b>${{totalPrice(index)}}</b>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6 col-md-offset-6">
+                                <span style="font-size:2.3em" class="pull-right">${{indexTotal(base)}}</span>
+                                <span style="font-size:1.6em;padding-right:12px;padding-top:5px;" class="pull-right">Total</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <button class="btn btn-success pull-right">
                 <i class="fa fa-check"></i>
                 SAVE
@@ -108,15 +139,46 @@
         data(){
             return {
                 order: {},
+                addingManual: false,
             };
         },
         methods: {
+            indexTotal: function(base){
+                let total = 0;
+                let component = this;
+                base.base.index.forEach(function(dex){
+                    console.log(total);
+                    total = parseFloat(total) + parseFloat(component.totalPrice(dex));
+                });
+                return parseFloat(total).toFixed(2);
+            },
+            totalPrice: function(index){
+                let price = this.unitPrice(index);
+                price = price * index.qty;
+                return price.toFixed(2);
+            },
+            unitPrice: function(index){
+                let price = (index.margin/100) * index.product.customer_price;
+                price = price + index.product.customer_price;
+                return price.toFixed(2);
+            },
             save: function(){
 
+            },
+            lineTotal: function(line){
+                let price = (line.product.customer_price * line.qty) * (line.margin/100 + 1);
+                return price.toFixed(2);
+            },
+            adjustedPrice: function(line){
+                let price = line.product.customer_price * (line.margin/100 + 1);
+                return price.toFixed(2);
             },
             fixDate: function(date){
                 console.log(moment(date).format('Y-M-d'));
                 return moment(date).format('Y-MM-DD');
+            },
+            imgUrl: function(style){
+                return 'https://www.ssactivewear.com/'+style.style_image;
             }
         },
         created: function(){
