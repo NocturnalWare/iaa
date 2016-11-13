@@ -25196,6 +25196,26 @@ return Vue;
 
 })));
 },{}],6:[function(require,module,exports){
+var inserted = exports.cache = {}
+
+exports.insert = function (css) {
+  if (inserted[css]) return
+  inserted[css] = true
+
+  var elem = document.createElement('style')
+  elem.setAttribute('type', 'text/css')
+
+  if ('textContent' in elem) {
+    elem.textContent = css
+  } else {
+    elem.styleSheet.cssText = css
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(elem)
+  return elem
+}
+
+},{}],7:[function(require,module,exports){
 "use strict";
 /* */
 "format global";
@@ -25779,7 +25799,7 @@ if ("undefined" == typeof jQuery) throw new Error("Bootstrap's JavaScript requir
   });
 }(jQuery);
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25841,7 +25861,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2c40e146", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":3}],8:[function(require,module,exports){
+},{"vue":4,"vue-hot-reload-api":3}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25923,7 +25943,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-768b82bb", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../vue-resource.min.js":13,"../vue.min.js":15,"moment":1,"vue":4,"vue-hot-reload-api":3}],9:[function(require,module,exports){
+},{"../vue-resource.min.js":14,"../vue.min.js":16,"moment":1,"vue":4,"vue-hot-reload-api":3}],10:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.no-padding{\n    padding:0px;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25952,7 +25974,8 @@ exports.default = {
     data: function data() {
         return {
             order: {},
-            addingManual: false
+            addingManual: false,
+            manualProduct: { product_name: '', color_name: '', sizes: [] }
         };
     },
 
@@ -25961,7 +25984,6 @@ exports.default = {
             var total = 0;
             var component = this;
             base.base.index.forEach(function (dex) {
-                console.log(total);
                 total = parseFloat(total) + parseFloat(component.totalPrice(dex));
             });
             return parseFloat(total).toFixed(2);
@@ -25974,6 +25996,24 @@ exports.default = {
         unitPrice: function unitPrice(index) {
             var price = index.margin / 100 * index.product.customer_price;
             price = price + index.product.customer_price;
+            return price.toFixed(2);
+        },
+        sizeTotal: function sizeTotal(manualProduct) {
+            var total = 0;
+            var component = this;
+            manualProduct.sizes.forEach(function (size) {
+                total = parseFloat(total) + parseFloat(component.sizePriceTotal(size));
+            });
+            return parseFloat(total).toFixed(2);
+        },
+        sizePriceTotal: function sizePriceTotal(size) {
+            var price = this.sizePrice(size);
+            price = price * size.qty;
+            return price.toFixed(2);
+        },
+        sizePrice: function sizePrice(size) {
+            var price = size.margin / 100 * size.price;
+            price = parseFloat(price) + parseFloat(size.price);
             return price.toFixed(2);
         },
         save: function save() {},
@@ -25991,6 +26031,12 @@ exports.default = {
         },
         imgUrl: function imgUrl(style) {
             return 'https://www.ssactivewear.com/' + style.style_image;
+        },
+        addSize: function addSize() {
+            this.manualProduct.sizes.push({ size_name: '', price: 0.00, margin: 40, qty: 0 });
+        },
+        saveManualProduct: function saveManualProduct() {
+            this.manualProduct = { product_name: '', color_name: '', sizes: [] };
         }
     },
     created: function created() {
@@ -25999,18 +26045,22 @@ exports.default = {
     ready: function ready() {}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <div>\n        <legend>\n            <h2>\n                {{order.company.name}}\n                <div class=\"col-md-6 col-xs-11 pull-right\">\n                    <span v-if=\"isCurrentOrder\" class=\"bg-info\">Current Order</span>\n                    <a v-if=\"!isCurrentOrder\" href=\"current/setAsCurrentOrder\">\n                        <button class=\"btn btn-primary\">MAKE CURRENT ORDER</button>\n                    </a>\n                </div>\n            </h2>\n            <div class=\"col-xs-12 col-md-6\">\n                <span class=\"input-group\">\n                    <label>Order Name</label>\n                    <input value=\"{{order.company.name}}\" class=\"form-control\" name=\"order_name\" placeholder=\"Order Name\">\n                </span>\n                <span class=\"input-group\">\n                    <label>Due</label>\n                    <span v-if=\"pastDue\" class=\"bg-warning text-danger pull-right\" style=\"padding:6px;\">Past Due</span>\n                    <input type=\"date\" :value=\"fixDate(order.hard_due)\" class=\"form-control\" name=\"hard_due\">\n                </span>\n            </div>\n            <div class=\"col-xs-12 col-md-6\">\n                <label>Address</label>\n                <p>\n                    {{order.company.profile.street_1}}\n                    {{order.company.profile.street_2}}\n                    <br>\n                    {{order.company.profile.city}}\n                    {{order.company.profile.state}},\n                    {{order.company.profile.zip}}\n                    <br>\n                    {{order.company.profile.country}}\n                </p>\n            </div>\n        </legend>\n        <div class=\"col-xs-12 col-md-11\" style=\"padding-top: 15px;\">\n            <button class=\"btn btn-info\" @click=\"addingManual = !addingManual\">ADD MANUAL PRODUCT</button>\n            <a target=\"_blank\">\n                <button class=\"btn btn-info\">\n                    ADD S&amp;S PRODUCT \n                    <span style=\"font-size: .7em\">(new tab)</span>\n                </button>\n            </a>\n\n        <div class=\"row\">\n            <div v-for=\"base in order.bases\">\n                <div class=\"col-xs-12\">\n                    <h3>\n                        {{base.base.style.brand.name}} {{base.base.style.style_name}} {{base.base.style.title}}\n                        <span style=\"font-size:.6em\">{{base.base.color_name}}</span>\n                    </h3>\n                    <div class=\"col-xs-12 col-md-3\">\n                        <img style=\"height:300px;\" class=\"img-responsive\" :src=\"imgUrl(base.base.style)\">\n                    </div>\n                    <div class=\"col-xs-12 col-md-8\">\n                        <div class=\"row\" style=\"border-bottom:1px solid #ddd;margin-bottom:6px\">\n                            <div class=\"col-xs-2\">\n                                <label>Size</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Price</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Margin</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Sale Price</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Qty</label>\n                            </div>\n                            <div class=\"col-xs-1\">\n                                <label>Total</label>\n                            </div>\n                        </div>\n                        <div v-for=\"index in base.base.index\">\n                            <div class=\"row\">\n                                <div class=\"col-xs-2\">\n                                    {{index.size_name}}\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    {{index.product.customer_price}}\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    <span class=\"input-group\">\n                                        <input type=\"range\" min=\"20\" max=\"100\" v-model=\"index.margin\">\n                                        <span class=\"input-group-addon\">{{index.margin}}%</span>\n                                    </span>\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    ${{unitPrice(index)}}\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    <input class=\"form-control\" v-model=\"index.qty\">    \n                                </div>\n                                <div class=\"col-xs-1\">\n                                    <b>${{totalPrice(index)}}</b>\n                                </div>\n                            </div>\n                        </div>\n                        <hr>\n                        <div class=\"row\">\n                            <div class=\"col-xs-12 col-md-6 col-md-offset-6\">\n                                <span style=\"font-size:2.3em\" class=\"pull-right\">${{indexTotal(base)}}</span>\n                                <span style=\"font-size:1.6em;padding-right:12px;padding-top:5px;\" class=\"pull-right\">Total</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <button class=\"btn btn-success pull-right\">\n                <i class=\"fa fa-check\"></i>\n                SAVE\n            </button>\n        </div>\n    </div>\n</div>"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <div>\n        <legend>\n            <h2>\n                {{order.company.name}}\n                <div class=\"col-md-6 col-xs-11 pull-right\">\n                    <span v-if=\"isCurrentOrder\" class=\"bg-info\">Current Order</span>\n                    <a v-if=\"!isCurrentOrder\" href=\"current/setAsCurrentOrder\">\n                        <button class=\"btn btn-primary\">MAKE CURRENT ORDER</button>\n                    </a>\n                </div>\n            </h2>\n            <div class=\"col-xs-12 col-md-6\">\n                <span class=\"input-group\">\n                    <label>Order Name</label>\n                    <input value=\"{{order.company.name}}\" class=\"form-control\" name=\"order_name\" placeholder=\"Order Name\">\n                </span>\n                <span class=\"input-group\">\n                    <label>Due</label>\n                    <span v-if=\"pastDue\" class=\"bg-warning text-danger pull-right\" style=\"padding:6px;\">Past Due</span>\n                    <input type=\"date\" :value=\"fixDate(order.hard_due)\" class=\"form-control\" name=\"hard_due\">\n                </span>\n            </div>\n            <div class=\"col-xs-12 col-md-6\">\n                <label>Address</label>\n                <p>\n                    {{order.company.profile.street_1}}\n                    {{order.company.profile.street_2}}\n                    <br>\n                    {{order.company.profile.city}}\n                    {{order.company.profile.state}},\n                    {{order.company.profile.zip}}\n                    <br>\n                    {{order.company.profile.country}}\n                </p>\n            </div>\n        </legend>\n        <div class=\"col-xs-12 col-md-11\" style=\"padding-top: 15px;\">\n            <button class=\"btn\" @click=\"addingManual = !addingManual\" :class=\"['', addingManual ? 'btn-primary' : 'btn-info']\">ADD{{addingManual ? 'ING' : ''}} MANUAL PRODUCT</button>\n            <a target=\"_blank\">\n                <button class=\"btn btn-info\">\n                    ADD S&amp;S PRODUCT \n                    <span style=\"font-size: .7em\">(new tab)</span>\n                </button>\n            </a>\n        <div class=\"row\">\n            <div v-if=\"addingManual\" class=\"col-xs-12 col-md-11\" style=\"border-radius:5px;border:1px solid #ddd;margin:10px;padding:20px 0px 40px 0px;\">\n                <div class=\"col-xs-12 col-md-11\">\n                    <div class=\"col-md-6\">\n                        <span class=\"input-group col-xs-12 no-padding\">\n                            <label>Product Name</label>\n                            <input class=\"form-control\" v-model=\"manualProduct.product_name\">\n                        </span>\n                    </div>\n                    <div class=\"col-md-6\">\n                        <span class=\"input-group col-xs-12 no-padding\">\n                            <label>Color(s)</label>\n                            <input class=\"form-control\" v-model=\"manualProduct.color_name\">\n                        </span>\n                    </div>\n                </div>\n                <div class=\"col-xs-12 col-md-3\" style=\"padding-right:0px;\">\n                    <div class=\"col-xs-12\" style=\"padding-right:0px;\">\n                        <div style=\"border:1px solid #ddd;border-radius:5px;color:#ddd;padding-right:0px;padding-bottom:15px;\">\n                            <center>\n                                <h3>Add Artwork After Save</h3>\n                                <br>\n                                <i style=\"font-size:7em\" class=\"fa fa-file-picture-o\"></i>\n                            </center>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col-xs-12 col-md-8\" style=\"padding-left:0px;padding-right:25px;\">\n                    <div style=\"border-radius:5px;border:1px solid #ddd;padding:20px;\"> \n                        <div class=\"row\">\n                            <button class=\"btn btn-info pull-right\" @click=\"addSize\">ADD SIZE</button>\n                        </div>\n                        <div class=\"row\">\n                            <div class=\"col-xs-2\">\n                                <label>Size</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Price</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Margin</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Sale Price</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Qty</label>\n                            </div>\n                            <div class=\"col-xs-1\">\n                                <label>Total</label>\n                            </div>\n                        </div>\n                        <div v-if=\"manualProduct.sizes.length > 0\">\n                            <hr>\n                            <div v-for=\"size in manualProduct.sizes\" class=\"row\">\n                                <div class=\"col-xs-2\">\n                                    <span class=\"input-group\">\n                                        <input class=\"form-control\" v-model=\"size.size_name\">\n                                    </span>\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    <span class=\"input-group\">\n                                        <span class=\"input-group-addon\">$</span>\n                                        <input class=\"form-control\" v-model=\"size.price\">\n                                    </span>\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    <span class=\"input-group\">\n                                        <input type=\"range\" min=\"20\" max=\"100\" v-model=\"size.margin\">\n                                        <span class=\"input-group-addon\">{{size.margin}}%</span>\n                                    </span>\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    <span class=\"input-group\">\n                                        <label>${{sizePrice(size)}}</label>\n                                    </span>\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    <span class=\"input-group\">\n                                        <input class=\"form-control\" v-model=\"size.qty\">\n                                    </span>\n                                </div>\n                                <div class=\"col-xs-1\">\n                                    <span class=\"input-group\">\n                                        <label>${{sizePriceTotal(size)}}</label>\n                                    </span>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"row\" v-if=\"manualProduct.sizes.length > 0\">\n                        <div class=\"col-xs-12 col-md-6 col-md-offset-6\">\n                            <span style=\"font-size:2.3em\" class=\"pull-right\">${{sizeTotal(manualProduct)}}</span>\n                            <span style=\"font-size:1.6em;padding-right:12px;padding-top:5px;\" class=\"pull-right\">Total</span>\n                        </div>\n                    </div>\n                    <div class=\"row\" v-if=\"manualProduct.sizes.length > 0 &amp;&amp; manualProduct.product_name !== '' &amp;&amp; manualProduct.color_name !== '' &amp;&amp; sizeTotal(manualProduct) > 0\">\n                        <button class=\"btn btn-success pull-right\" @click=\"saveManualProduct\"><i class=\"fa fa-check-o\"></i>SAVE TO ORDER</button>\n                    </div>\n                </div>\n            </div>\n            <div v-for=\"base in order.bases\">\n                <div class=\"col-xs-12\">\n                    <h3>\n                        {{base.base.style.brand.name}} {{base.base.style.style_name}} {{base.base.style.title}}\n                        <span style=\"font-size:.6em\">{{base.base.color_name}}</span>\n                    </h3>\n                    <div class=\"col-xs-12 col-md-3\">\n                        <img style=\"height:300px;\" class=\"img-responsive\" :src=\"imgUrl(base.base.style)\">\n                    </div>\n                    <div class=\"col-xs-12 col-md-8\">\n                        <div class=\"row\" style=\"border-bottom:1px solid #ddd;margin-bottom:6px\">\n                            <div class=\"col-xs-2\">\n                                <label>Size</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Price</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Margin</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Sale Price</label>\n                            </div>\n                            <div class=\"col-xs-2\">\n                                <label>Qty</label>\n                            </div>\n                            <div class=\"col-xs-1\">\n                                <label>Total</label>\n                            </div>\n                        </div>\n                        <div v-for=\"index in base.base.index\">\n                            <div class=\"row\">\n                                <div class=\"col-xs-2\">\n                                    {{index.size_name}}\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    {{index.product.customer_price}}\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    <span class=\"input-group\">\n                                        <input type=\"range\" min=\"20\" max=\"100\" v-model=\"index.margin\">\n                                        <span class=\"input-group-addon\">{{index.margin}}%</span>\n                                    </span>\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    ${{unitPrice(index)}}\n                                </div>\n                                <div class=\"col-xs-2\">\n                                    <input class=\"form-control\" v-model=\"index.qty\">    \n                                </div>\n                                <div class=\"col-xs-1\">\n                                    <b>${{totalPrice(index)}}</b>\n                                </div>\n                            </div>\n                        </div>\n                        <hr>\n                        <div class=\"row\">\n                            <div class=\"col-xs-12 col-md-6 col-md-offset-6\">\n                                <span style=\"font-size:2.3em\" class=\"pull-right\">${{indexTotal(base)}}</span>\n                                <span style=\"font-size:1.6em;padding-right:12px;padding-top:5px;\" class=\"pull-right\">Total</span>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"row\">\n            <button class=\"btn btn-success pull-right\">\n                <i class=\"fa fa-check\"></i>\n                SAVE\n            </button>\n        </div>\n    </div>\n</div>"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.no-padding{\n    padding:0px;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-77be20d4", module.exports)
   } else {
     hotAPI.update("_v-77be20d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"moment":1,"vue":4,"vue-hot-reload-api":3}],10:[function(require,module,exports){
+},{"moment":1,"vue":4,"vue-hot-reload-api":3,"vueify/lib/insert-css":6}],11:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -28294,7 +28344,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, b || (a.jQuery = a.$ = r), r;
 });
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 var _createOrder = require('./components/create-order.vue');
@@ -28333,7 +28383,7 @@ new Vue({
 
 });
 
-},{"./components/create-order.vue":7,"./components/note-block.vue":8,"./components/order-table.vue":9,"./jquery.min.js":10,"./vue-resource.min.js":13,"./vue-router.min.js":14,"moment":1,"vue/dist/vue.js":5}],12:[function(require,module,exports){
+},{"./components/create-order.vue":8,"./components/note-block.vue":9,"./components/order-table.vue":10,"./jquery.min.js":11,"./vue-resource.min.js":14,"./vue-router.min.js":15,"moment":1,"vue/dist/vue.js":5}],13:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -29834,7 +29884,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   a.version = "2.15.2", b(rb), a.fn = Se, a.min = tb, a.max = ub, a.now = Fe, a.utc = j, a.unix = Jc, a.months = Pc, a.isDate = f, a.locale = Za, a.invalid = n, a.duration = Nb, a.isMoment = r, a.weekdays = Rc, a.parseZone = Kc, a.localeData = ab, a.isDuration = wb, a.monthsShort = Qc, a.weekdaysMin = Tc, a.defineLocale = $a, a.updateLocale = _a, a.locales = bb, a.weekdaysShort = Sc, a.normalizeUnits = J, a.relativeTimeRounding = id, a.relativeTimeThreshold = jd, a.calendarFormat = Tb, a.prototype = Se;var nf = a;return nf;
 });
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -30299,7 +30349,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }), tt.actions = { get: { method: "GET" }, save: { method: "POST" }, query: { method: "GET" }, update: { method: "PUT" }, remove: { method: "DELETE" }, delete: { method: "DELETE" } }, "undefined" != typeof window && window.Vue && window.Vue.use(et), et;
 });
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -30836,7 +30886,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, Object.defineProperties(Tt.prototype, qt), Tt.install = m, Ot && window.Vue && window.Vue.use(Tt), Tt;
 });
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32862,6 +32912,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 
-},{}]},{},[11,10,15,12,14,6]);
+},{}]},{},[12,11,16,13,15,7]);
 
 //# sourceMappingURL=bundle.js.map
