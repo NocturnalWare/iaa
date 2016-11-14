@@ -108,9 +108,21 @@ class OrdersController extends Controller
      * @return void
      */
     public function destroyLine(OrderLine $order_line)
+    {   
+        $order_line->delete();
+        return redirect()->back();
+    }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function removeBase(Request $request)
     {	
-    	$order_line->delete();
-    	return redirect()->back();
+        $base = OrderBase::find($request->get('base'));
+        $base->delete();
+    	return 200;
     }
     
     

@@ -149,6 +149,17 @@
                     <h3>
                         {{base.base.style.brand.name}} {{base.base.style.style_name}} {{base.base.style.title}}
                         <span style="font-size:.6em">{{base.base.color_name}}</span>
+                        <div class="btn-group pull-right">
+                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-trash" <span class="caret"></i>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li @click="removeBase(base)" class="btn">
+                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                Remove From Order
+                            </li>
+                          </ul>
+                        </div>
                     </h3>
                     <div class="col-xs-12 col-md-3">
                         <img style="height:300px;" class="img-responsive" :src="imgUrl(base.base.style)">
@@ -221,7 +232,9 @@
 
 <script>
     import moment from 'moment';
-
+    import Vue from '../vue.min.js';
+    Vue.use(require('../vue-resource.min.js'));
+    
     export default {
         computed:{ 
             pastDue: function(){
@@ -302,6 +315,15 @@
             },
             saveManualProduct: function(){
                 this.manualProduct = { product_name : '', color_name : '', sizes : [] };
+            },
+            removeBase: function(base){
+                let component = this;
+                let call = Vue.http.post('removeBase', {base : base.id, _token : window.Laravel.csrfToken});
+                call.then(function(response){
+                    if(response.data == 200){
+                        component.order.bases.$remove(base);
+                    }
+                });
             }
         },
         created: function(){
