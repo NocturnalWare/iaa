@@ -10,6 +10,7 @@ use App\SSActivewear\SSActivewearStyle;
 class OrderBase extends Model
 {
 	protected $with = ['base'];
+	protected $appends = ['showPanel'];
     /**
      * Description
      *
@@ -29,5 +30,16 @@ class OrderBase extends Model
     {
     	return $this->belongsTo(SSActivewearBase::class, 'base_id', 'id');
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function getshowPanelAttribute()
+    {
+    	return $this->attributes['showPanel'] = 'product';
+    }
+    
     
 }

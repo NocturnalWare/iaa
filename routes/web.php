@@ -75,4 +75,10 @@ Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	Route::get('/user/dashboard', 'DashboardController@index')->name('dashboard');
 	Route::get('/user/profile', 'User\ProfileController@edit')->name('user.edit');
 	Route::put('/user/profile/update', 'User\ProfileController@update')->name('user.update');
+
+	//SETTINGS/ADMIN ROUTES
+	Route::group(['middleware' => 'checkForGod'], function(){
+		Route::get('admin/settings', 'Admin\SettingsController@index')->name('admin.settings.index');
+		Route::put('admin/settings/update', 'Admin\SettingsController@update')->name('admin.settings.update');
+	});
 });

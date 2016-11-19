@@ -3,7 +3,7 @@
 namespace App\Orders;
 
 use Illuminate\Database\Eloquent\Model;
-use App\SSActivewear\SSActivewearProduct;
+use App\SSActivewear\SSActivewearBase;
 class OrderLine extends Model
 {
     protected $fillable = [
@@ -13,7 +13,9 @@ class OrderLine extends Model
         'size',
     ];
 
-    protected $with = ['product'];
+    protected $with = ['base', 'decos'];
+
+    protected $appends = ['showPanel'];
     /**
      * Description
      *
@@ -29,9 +31,9 @@ class OrderLine extends Model
      *
      * @return void
      */
-    public function linePrice()
+    public function base()
     {
-    	return;
+        return $this->belongsTo(SSActivewearBase::class, 'order_base_id', 'id');
     }
 
     /**
@@ -39,35 +41,18 @@ class OrderLine extends Model
      *
      * @return void
      */
-    public function product()
+    public function decos()
     {
-    	return $this->belongsTo(SSActivewearProduct::class);
+        return $this->hasMany(OrderDeco::class);
     }
-    
-    
+
     /**
      * Description
      *
      * @return void
      */
-    public function otherSizes()
+    public function getshowPanelAttribute()
     {
-    	$products = [];
-    	$otherLines = OrderLine::where('order_id', $this->order_id)->pluck('product_id');
-
-    	if(!empty($this->product_id)){
-    		$products = SSActivewearProduct::select('size_name')
-    			->distinct()
-    			->whereNotIn('id', $otherLines)
-	    		->where('brand_name', $this->product->brand_name)
-	    		->where('style_id', $this->product->style_id)
-	    		->where('color_code', $this->product->color_code)
-	    		->pluck('size_name')
-	    		->toArray();
-	   	}
-
-    	return $products;
+        return $this->attributes['showPanel'] = 'product';
     }
-    
-    
 }

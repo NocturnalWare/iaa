@@ -18,7 +18,8 @@ class CreateSsactivewearStylesTable extends Migration
             $table->string('external_style_id');
             $table->string('base_category');
             $table->string('part_number');
-            $table->string('brand_id');
+            $table->integer('brand_id');
+            $table->integer('category_id');
             $table->string('style_name');
             $table->string('title');
             $table->text('description');

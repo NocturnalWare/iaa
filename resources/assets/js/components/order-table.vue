@@ -144,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            <div v-for="base in order.bases">
+            <div v-for="base in order.lines">
                 <div class="col-xs-12">
                     <h3>
                         {{base.base.style.brand.name}} {{base.base.style.style_name}} {{base.base.style.title}}
@@ -161,60 +161,134 @@
                           </ul>
                         </div>
                     </h3>
-                    <div class="col-xs-12 col-md-3">
-                        <img style="height:300px;" class="img-responsive" :src="imgUrl(base.base.style)">
-                    </div>
-                    <div class="col-xs-12 col-md-8">
-                        <div class="row" style="border-bottom:1px solid #ddd;margin-bottom:6px">
-                            <div class="col-xs-2">
-                                <label>Size</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>Price</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>Margin</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>Sale Price</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>Qty</label>
-                            </div>
-                            <div class="col-xs-1">
-                                <label>Total</label>
-                            </div>
+                </div>
+                <div class="col-xs-12 well" style="background-color:#fff">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <span class="input-group col-xs-12">
+                                <label>Design Name</label>
+                                <input class="form-control">
+                            </span>
                         </div>
-                        <div v-for="index in base.base.index">
-                            <div class="row">
+                        <div class="col-xs-6">
+                            <span class="input-group">
+                                <label>Ink Colors</label><br>
+                                Red Blue Grey Pink
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12" style="padding:15px;">
+                        <button class="btn btn-primary col-xs-4" :class="['', base.showPanel == 'product' ? 'btn-primary' : 'btn-default']" @click="showProduct(base)">Product</button>
+                        <button class="btn btn-default col-xs-4" :class="['', base.showPanel == 'deco' ? 'btn-primary' : 'btn-default']" @click="showDeco(base)">Deco</button>
+                        <button class="btn btn-default col-xs-4" :class="['', base.showPanel == 'breakdown' ? 'btn-primary' : 'btn-default']" @click="showBreakdown(base)">Breakdown</button>
+                    </div>
+                    <div v-show="base.showPanel == 'deco'">
+                        <div class="col-xs-12 well" style="background-color:#fff">
+                            <button class="btn btn-xs pull-right" @click="addDeco(base)">ADD LOCATION</button>
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Artwork</th>
+                                        <th>Location</th>
+                                        <th>Colors</th>
+                                        <th>Size</th>
+                                        <th>Screens</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="deco in base.decos">
+                                        <td class="col-xs-2">
+                                            <select class="form-control" v-model="deco.art_id">
+                                                <option value="1">A.psd</option>
+                                                <option value="2">AR.psd</option>
+                                                <option value="3">ART</option>
+                                                <option value="4">ARTW.psd</option>
+                                                <option value="5">ARTWO</option>
+                                                <option value="6">ARTWOR</option>
+                                                <option value="7">ARTWORK</option>
+                                            </select>
+                                        </td>
+                                        <td class="col-xs-3">
+                                            <input class="form-control" v-model="deco.location_name">
+                                        </td>
+                                        <td class="col-xs-3">
+                                            <input class="form-control" v-model="deco.colors">
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <span class="input-group">
+                                                <input class="form-control" v-model="deco.size">
+                                                <span class="input-group-addon">
+                                                    "
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <input class="form-control" v-model="deco.screens">
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <label style="padding:10px;">$10.99</label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div v-show="base.showPanel == 'product'">
+                        <div class="col-xs-12 col-md-3">
+                            <img style="height:300px;" class="img-responsive" :src="imgUrl(base.base.style)">
+                        </div>
+                        <div class="col-xs-12 col-md-8">
+                            <div class="row" style="border-bottom:1px solid #ddd;margin-bottom:6px">
                                 <div class="col-xs-2">
-                                    {{index.size_name}}
+                                    <label>Size</label>
                                 </div>
                                 <div class="col-xs-2">
-                                    {{index.product.customer_price}}
+                                    <label>Price</label>
                                 </div>
                                 <div class="col-xs-2">
-                                    <span class="input-group">
-                                        <input type="range" min="20" max="100" v-model='index.margin'>
-                                        <span class="input-group-addon">{{index.margin}}%</span>
-                                    </span>
+                                    <label>Margin</label>
                                 </div>
                                 <div class="col-xs-2">
-                                    ${{unitPrice(index)}}
+                                    <label>Sale Price</label>
                                 </div>
                                 <div class="col-xs-2">
-                                    <input class="form-control" v-model="index.qty">    
+                                    <label>Qty</label>
                                 </div>
                                 <div class="col-xs-1">
-                                    <b>${{totalPrice(index)}}</b>
+                                    <label>Total</label>
                                 </div>
                             </div>
-                        </div>
-                        <hr />
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6 col-md-offset-6">
-                                <span style="font-size:2.3em" class="pull-right">${{indexTotal(base)}}</span>
-                                <span style="font-size:1.6em;padding-right:12px;padding-top:5px;" class="pull-right">Total</span>
+                            <div v-for="index in base.base.index">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        {{index.size_name}}
+                                    </div>
+                                    <div class="col-xs-2">
+                                        {{index.product.customer_price}}
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span class="input-group">
+                                            <input type="range" min="20" max="100" v-model='index.margin'>
+                                            <span class="input-group-addon">{{index.margin}}%</span>
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        ${{unitPrice(index)}}
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input class="form-control" v-model="index.qty">    
+                                    </div>
+                                    <div class="col-xs-1">
+                                        <b>${{totalPrice(index)}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6 col-md-offset-6">
+                                    <span style="font-size:2.3em" class="pull-right">${{indexTotal(base)}}</span>
+                                    <span style="font-size:1.6em;padding-right:12px;padding-top:5px;" class="pull-right">Product Total</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -234,7 +308,7 @@
     import moment from 'moment';
     import Vue from '../vue.min.js';
     Vue.use(require('../vue-resource.min.js'));
-    
+
     export default {
         computed:{ 
             pastDue: function(){
@@ -256,6 +330,18 @@
             };
         },
         methods: {
+            addDeco: function(base){
+                base.decos.push({art_id : 1});
+            },
+            showProduct: function(base){
+                base.showPanel = 'product';
+            },
+            showDeco: function(base){
+                base.showPanel = 'deco';
+            },
+            showBreakdown: function(base){
+                base.showPanel = 'breakdown';
+            },
             indexTotal: function(base){
                 let total = 0;
                 let component = this;

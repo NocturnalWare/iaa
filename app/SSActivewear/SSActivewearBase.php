@@ -45,4 +45,14 @@ class SSActivewearBase extends Model
     	return $this->hasMany(OrderBase::class, 'base_id', 'id');
     }
     
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function lines()
+    {
+    	return $this->hasMany(OrderLine::class, 'id', 'order_base_id');
+    }
+    
 }

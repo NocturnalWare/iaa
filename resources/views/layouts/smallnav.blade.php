@@ -55,6 +55,10 @@
             <a href="{{route('user.edit')}}">
                 My Profile
             </a>
+        </li>
+        <li>
+        	Admin Settings
+        </li>
         <li>
             <a href="{{ url('/logout') }}"
                 onclick="event.preventDefault();

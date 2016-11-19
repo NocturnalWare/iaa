@@ -53,5 +53,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'setOrderCounts' => \App\Http\Middleware\SetOrderCounts::class,
+        'checkForGod' => \App\Http\Middleware\checkForGod::class,
     ];
 }

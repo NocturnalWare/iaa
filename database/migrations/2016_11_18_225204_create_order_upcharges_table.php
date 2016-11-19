@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrderLinesTable extends Migration
-{    
+class CreateOrderUpchargesTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -13,10 +13,11 @@ class CreateOrderLinesTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_lines', function (Blueprint $table) {
+        Schema::create('order_line_upcharges', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('order_id');
-            $table->integer('order_base_id');
+            $table->integer('order_id')->default(0);
+            $table->string('upcharge_name')->default('');
+            $table->double('markup_per_unit')->default(0.0);
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateOrderLinesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('order_lines');
+        Schema::drop('order_line_upcharges');
     }
 }

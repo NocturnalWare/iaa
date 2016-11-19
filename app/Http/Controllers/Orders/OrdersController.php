@@ -87,17 +87,11 @@ class OrdersController extends Controller
         $currentOrder = CurrentOrder::getCurrentOrder();
         $newOrder = new OrderBase;
     	$newOrder->order()->associate($currentOrder);
-        $newOrder->base()->associate($base);
+        $newLine = new OrderLine;
+        $newLine->base()->associate($base);
+        $newOrder->lines()->save($newline);
         $newOrder->save();
-        // $currentOrder = CurrentOrder::getCurrentOrder();
-        // $newOrder = new OrderLine;
-    	// $newOrder->product()->associate($product);
-    	// $newOrder->line_text = $product->buildLineText();
-     //    $newOrder->size = $product->size_name;
-     //    $newOrder->color_name = $product->color_name;
-     //    $newOrder->color_1 = $product->color_1;
-     //    $newOrder->color_2 = $product->color_2;
-     //    $newOrder->save();
+
 
     	return redirect()->back();
     }

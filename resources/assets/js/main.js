@@ -13,6 +13,7 @@ window.moment = moment;
 import createOrder from './components/create-order.vue';
 import orderTable from './components/order-table.vue';
 import noteBlock from './components/note-block.vue';
+import quantityPriceIndex from './components/quantity-price-index.vue';
 
 
 new Vue({
@@ -22,6 +23,7 @@ new Vue({
     	createOrder,
     	orderTable,
     	noteBlock,
+    	quantityPriceIndex
     },
 
 });
