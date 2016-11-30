@@ -89,7 +89,7 @@ class OrdersController extends Controller
     	$newOrder->order()->associate($currentOrder);
         $newLine = new OrderLine;
         $newLine->base()->associate($base);
-        $newOrder->lines()->save($newline);
+        $newOrder->order->lines()->save($newLine);
         $newOrder->save();
 
 
