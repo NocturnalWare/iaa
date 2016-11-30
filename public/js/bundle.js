@@ -1,4 +1,220 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports = { "default": require("core-js/library/fn/object/define-property"), __esModule: true };
+},{"core-js/library/fn/object/define-property":3}],2:[function(require,module,exports){
+"use strict";
+
+exports.__esModule = true;
+
+var _defineProperty = require("../core-js/object/define-property");
+
+var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (obj, key, value) {
+  if (key in obj) {
+    (0, _defineProperty2.default)(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+};
+},{"../core-js/object/define-property":1}],3:[function(require,module,exports){
+require('../../modules/es6.object.define-property');
+var $Object = require('../../modules/_core').Object;
+module.exports = function defineProperty(it, key, desc){
+  return $Object.defineProperty(it, key, desc);
+};
+},{"../../modules/_core":6,"../../modules/es6.object.define-property":19}],4:[function(require,module,exports){
+module.exports = function(it){
+  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
+  return it;
+};
+},{}],5:[function(require,module,exports){
+var isObject = require('./_is-object');
+module.exports = function(it){
+  if(!isObject(it))throw TypeError(it + ' is not an object!');
+  return it;
+};
+},{"./_is-object":15}],6:[function(require,module,exports){
+var core = module.exports = {version: '2.4.0'};
+if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
+},{}],7:[function(require,module,exports){
+// optional / simple context binding
+var aFunction = require('./_a-function');
+module.exports = function(fn, that, length){
+  aFunction(fn);
+  if(that === undefined)return fn;
+  switch(length){
+    case 1: return function(a){
+      return fn.call(that, a);
+    };
+    case 2: return function(a, b){
+      return fn.call(that, a, b);
+    };
+    case 3: return function(a, b, c){
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function(/* ...args */){
+    return fn.apply(that, arguments);
+  };
+};
+},{"./_a-function":4}],8:[function(require,module,exports){
+// Thank's IE8 for his funny defineProperty
+module.exports = !require('./_fails')(function(){
+  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+});
+},{"./_fails":11}],9:[function(require,module,exports){
+var isObject = require('./_is-object')
+  , document = require('./_global').document
+  // in old IE typeof document.createElement is 'object'
+  , is = isObject(document) && isObject(document.createElement);
+module.exports = function(it){
+  return is ? document.createElement(it) : {};
+};
+},{"./_global":12,"./_is-object":15}],10:[function(require,module,exports){
+var global    = require('./_global')
+  , core      = require('./_core')
+  , ctx       = require('./_ctx')
+  , hide      = require('./_hide')
+  , PROTOTYPE = 'prototype';
+
+var $export = function(type, name, source){
+  var IS_FORCED = type & $export.F
+    , IS_GLOBAL = type & $export.G
+    , IS_STATIC = type & $export.S
+    , IS_PROTO  = type & $export.P
+    , IS_BIND   = type & $export.B
+    , IS_WRAP   = type & $export.W
+    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+    , expProto  = exports[PROTOTYPE]
+    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
+    , key, own, out;
+  if(IS_GLOBAL)source = name;
+  for(key in source){
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    if(own && key in exports)continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? ctx(out, global)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function(C){
+      var F = function(a, b, c){
+        if(this instanceof C){
+          switch(arguments.length){
+            case 0: return new C;
+            case 1: return new C(a);
+            case 2: return new C(a, b);
+          } return new C(a, b, c);
+        } return C.apply(this, arguments);
+      };
+      F[PROTOTYPE] = C[PROTOTYPE];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
+    if(IS_PROTO){
+      (exports.virtual || (exports.virtual = {}))[key] = out;
+      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
+      if(type & $export.R && expProto && !expProto[key])hide(expProto, key, out);
+    }
+  }
+};
+// type bitmap
+$export.F = 1;   // forced
+$export.G = 2;   // global
+$export.S = 4;   // static
+$export.P = 8;   // proto
+$export.B = 16;  // bind
+$export.W = 32;  // wrap
+$export.U = 64;  // safe
+$export.R = 128; // real proto method for `library` 
+module.exports = $export;
+},{"./_core":6,"./_ctx":7,"./_global":12,"./_hide":13}],11:[function(require,module,exports){
+module.exports = function(exec){
+  try {
+    return !!exec();
+  } catch(e){
+    return true;
+  }
+};
+},{}],12:[function(require,module,exports){
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
+},{}],13:[function(require,module,exports){
+var dP         = require('./_object-dp')
+  , createDesc = require('./_property-desc');
+module.exports = require('./_descriptors') ? function(object, key, value){
+  return dP.f(object, key, createDesc(1, value));
+} : function(object, key, value){
+  object[key] = value;
+  return object;
+};
+},{"./_descriptors":8,"./_object-dp":16,"./_property-desc":17}],14:[function(require,module,exports){
+module.exports = !require('./_descriptors') && !require('./_fails')(function(){
+  return Object.defineProperty(require('./_dom-create')('div'), 'a', {get: function(){ return 7; }}).a != 7;
+});
+},{"./_descriptors":8,"./_dom-create":9,"./_fails":11}],15:[function(require,module,exports){
+module.exports = function(it){
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+},{}],16:[function(require,module,exports){
+var anObject       = require('./_an-object')
+  , IE8_DOM_DEFINE = require('./_ie8-dom-define')
+  , toPrimitive    = require('./_to-primitive')
+  , dP             = Object.defineProperty;
+
+exports.f = require('./_descriptors') ? Object.defineProperty : function defineProperty(O, P, Attributes){
+  anObject(O);
+  P = toPrimitive(P, true);
+  anObject(Attributes);
+  if(IE8_DOM_DEFINE)try {
+    return dP(O, P, Attributes);
+  } catch(e){ /* empty */ }
+  if('get' in Attributes || 'set' in Attributes)throw TypeError('Accessors not supported!');
+  if('value' in Attributes)O[P] = Attributes.value;
+  return O;
+};
+},{"./_an-object":5,"./_descriptors":8,"./_ie8-dom-define":14,"./_to-primitive":18}],17:[function(require,module,exports){
+module.exports = function(bitmap, value){
+  return {
+    enumerable  : !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable    : !(bitmap & 4),
+    value       : value
+  };
+};
+},{}],18:[function(require,module,exports){
+// 7.1.1 ToPrimitive(input [, PreferredType])
+var isObject = require('./_is-object');
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+module.exports = function(it, S){
+  if(!isObject(it))return it;
+  var fn, val;
+  if(S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+  if(typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))return val;
+  if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+},{"./_is-object":15}],19:[function(require,module,exports){
+var $export = require('./_export');
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+$export($export.S + $export.F * !require('./_descriptors'), 'Object', {defineProperty: require('./_object-dp').f});
+},{"./_descriptors":8,"./_export":10,"./_object-dp":16}],20:[function(require,module,exports){
 //! moment.js
 //! version : 2.15.2
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -4233,7 +4449,7 @@
     return _moment;
 
 }));
-},{}],2:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -4415,7 +4631,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],3:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var Vue // late bind
 var map = Object.create(null)
 var shimmed = false
@@ -4716,7 +4932,7 @@ function format (id) {
   return match ? match[0] : id
 }
 
-},{}],4:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 (function (process){
 /*!
  * Vue.js v1.0.28
@@ -14957,7 +15173,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'))
-},{"_process":2}],5:[function(require,module,exports){
+},{"_process":21}],24:[function(require,module,exports){
 /*!
  * Vue.js v1.0.28
  * (c) 2016 Evan You
@@ -25195,7 +25411,7 @@ setTimeout(function () {
 return Vue;
 
 })));
-},{}],6:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var inserted = exports.cache = {}
 
 exports.insert = function (css) {
@@ -25215,7 +25431,7 @@ exports.insert = function (css) {
   return elem
 }
 
-},{}],7:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 "use strict";
 /* */
 "format global";
@@ -25799,7 +26015,7 @@ if ("undefined" == typeof jQuery) throw new Error("Bootstrap's JavaScript requir
   });
 }(jQuery);
 
-},{}],8:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25861,7 +26077,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2c40e146", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":4,"vue-hot-reload-api":3}],9:[function(require,module,exports){
+},{"vue":23,"vue-hot-reload-api":22}],28:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25943,7 +26159,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-768b82bb", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../vue-resource.min.js":15,"../vue.min.js":17,"moment":1,"vue":4,"vue-hot-reload-api":3}],10:[function(require,module,exports){
+},{"../vue-resource.min.js":35,"../vue.min.js":37,"moment":20,"vue":23,"vue-hot-reload-api":22}],29:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.no-padding{\n    padding:0px;\n}\n")
 'use strict';
@@ -26087,12 +26303,16 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-77be20d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../vue-resource.min.js":15,"../vue.min.js":17,"moment":1,"vue":4,"vue-hot-reload-api":3,"vueify/lib/insert-css":6}],11:[function(require,module,exports){
+},{"../vue-resource.min.js":35,"../vue.min.js":37,"moment":20,"vue":23,"vue-hot-reload-api":22,"vueify/lib/insert-css":25}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
 var _vueMin = require('../vue.min.js');
 
@@ -26104,10 +26324,21 @@ _vueMin2.default.use(require('../vue-resource.min.js'));
 
 exports.default = {
     data: function data() {
-        return {
-            prices: inkaddict.prices,
-            saved: false
-        };
+        var _ref;
+
+        return _ref = {
+            prices: inkaddict.prices
+
+        }, (0, _defineProperty3.default)(_ref, 'prices', inkaddict.prices.filter(function (price) {
+            price.tier_1 = price.tier_1.toFixed(2);
+            price.tier_2 = price.tier_2.toFixed(2);
+            price.tier_3 = price.tier_3.toFixed(2);
+            price.tier_4 = price.tier_4.toFixed(2);
+            price.tier_5 = price.tier_5.toFixed(2);
+            price.tier_6 = price.tier_6.toFixed(2);
+            price.tier_7 = price.tier_7.toFixed(2);
+            return true;
+        })), (0, _defineProperty3.default)(_ref, 'saved', false), _ref;
     },
 
     methods: {
@@ -26132,7 +26363,54 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7efd6295", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"../vue-resource.min.js":15,"../vue.min.js":17,"vue":4,"vue-hot-reload-api":3}],12:[function(require,module,exports){
+},{"../vue-resource.min.js":35,"../vue.min.js":37,"babel-runtime/helpers/defineProperty":2,"vue":23,"vue-hot-reload-api":22}],31:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vueMin = require('../vue.min.js');
+
+var _vueMin2 = _interopRequireDefault(_vueMin);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_vueMin2.default.use(require('../vue-resource.min.js'));
+
+exports.default = {
+    data: function data() {
+        return {
+            upcharges: inkaddict.upcharges.filter(function (upcharge) {
+                return upcharge.markup_rate = upcharge.markup_rate.toFixed(2);
+            }),
+            saved: false
+        };
+    },
+
+    methods: {
+        save: function save() {
+            var component = this;
+            var call = _vueMin2.default.http.put('settings/updateUpcharges', { upcharges: component.upcharges, _token: window.Laravel.csrfToken });
+            call.then(function (response) {
+                component.saved = true;
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"row\">\n    <div class=\"col-xs-12 col-md-6\">\n        <table class=\"table table-striped table-hover\">\n            <tbody><tr>\n                </tr></tbody><thead>\n                    <tr><th class=\"col-xs-7\">Name</th>\n                    <th>Per Unit</th>\n                    <th>Rate</th>\n                </tr></thead>\n            \n            <tbody><tr v-for=\"upcharge in upcharges\">\n                <td><label>{{upcharge.name}}</label></td>\n                <td><button class=\"btn btn-xs\" @click=\"upcharge.per_unit = !upcharge.per_unit\" :class=\"['', upcharge.per_unit ? 'btn-info' : 'btn-default']\">{{upcharge.per_unit ? 'Yes' : 'No'}}</button></td>\n                <td>\n                    <span class=\"input-group\">\n                        <span class=\"input-group-addon\">$</span>\n                        <input class=\"form-control\" v-model=\"upcharge.markup_rate\">\n                    </span>\n                </td>\n            </tr>\n        </tbody></table>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-xs-12 col-md-5\">\n        <button @click=\"save\" class=\"pull-right btn\" :class=\"['', saved ? 'btn-success' : 'btn-info']\"><i class=\"fa fa-lg\" :class=\"['', saved ? 'fa-check-circle-o' : 'fa-circle-o']\"></i> {{saved ? 'UPDATED' : 'UPDATE'}}</button>\n    </div>\n</div>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-7ece0719", module.exports)
+  } else {
+    hotAPI.update("_v-7ece0719", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"../vue-resource.min.js":35,"../vue.min.js":37,"vue":23,"vue-hot-reload-api":22}],32:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -28416,7 +28694,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, b || (a.jQuery = a.$ = r), r;
 });
 
-},{}],13:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 'use strict';
 
 var _createOrder = require('./components/create-order.vue');
@@ -28434,6 +28712,10 @@ var _noteBlock2 = _interopRequireDefault(_noteBlock);
 var _quantityPriceIndex = require('./components/quantity-price-index.vue');
 
 var _quantityPriceIndex2 = _interopRequireDefault(_quantityPriceIndex);
+
+var _upchargePriceIndex = require('./components/upcharge-price-index.vue');
+
+var _upchargePriceIndex2 = _interopRequireDefault(_upchargePriceIndex);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28455,12 +28737,13 @@ new Vue({
         createOrder: _createOrder2.default,
         orderTable: _orderTable2.default,
         noteBlock: _noteBlock2.default,
+        upchargePriceIndex: _upchargePriceIndex2.default,
         quantityPriceIndex: _quantityPriceIndex2.default
     }
 
 });
 
-},{"./components/create-order.vue":8,"./components/note-block.vue":9,"./components/order-table.vue":10,"./components/quantity-price-index.vue":11,"./jquery.min.js":12,"./vue-resource.min.js":15,"./vue-router.min.js":16,"moment":1,"vue/dist/vue.js":5}],14:[function(require,module,exports){
+},{"./components/create-order.vue":27,"./components/note-block.vue":28,"./components/order-table.vue":29,"./components/quantity-price-index.vue":30,"./components/upcharge-price-index.vue":31,"./jquery.min.js":32,"./vue-resource.min.js":35,"./vue-router.min.js":36,"moment":20,"vue/dist/vue.js":24}],34:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -29961,7 +30244,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   a.version = "2.15.2", b(rb), a.fn = Se, a.min = tb, a.max = ub, a.now = Fe, a.utc = j, a.unix = Jc, a.months = Pc, a.isDate = f, a.locale = Za, a.invalid = n, a.duration = Nb, a.isMoment = r, a.weekdays = Rc, a.parseZone = Kc, a.localeData = ab, a.isDuration = wb, a.monthsShort = Qc, a.weekdaysMin = Tc, a.defineLocale = $a, a.updateLocale = _a, a.locales = bb, a.weekdaysShort = Sc, a.normalizeUnits = J, a.relativeTimeRounding = id, a.relativeTimeThreshold = jd, a.calendarFormat = Tb, a.prototype = Se;var nf = a;return nf;
 });
 
-},{}],15:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -30426,7 +30709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }), tt.actions = { get: { method: "GET" }, save: { method: "POST" }, query: { method: "GET" }, update: { method: "PUT" }, remove: { method: "DELETE" }, delete: { method: "DELETE" } }, "undefined" != typeof window && window.Vue && window.Vue.use(et), et;
 });
 
-},{}],16:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -30963,7 +31246,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }, Object.defineProperties(Tt.prototype, qt), Tt.install = m, Ot && window.Vue && window.Vue.use(Tt), Tt;
 });
 
-},{}],17:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32989,6 +33272,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 
-},{}]},{},[13,12,17,14,16,7]);
+},{}]},{},[33,32,37,34,36,26]);
 
 //# sourceMappingURL=bundle.js.map

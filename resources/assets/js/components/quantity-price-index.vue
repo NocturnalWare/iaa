@@ -81,6 +81,17 @@
         data(){
             return {
                 prices: inkaddict.prices,
+
+                prices: inkaddict.prices.filter(function(price){
+                    price.tier_1 = price.tier_1.toFixed(2);
+                    price.tier_2 = price.tier_2.toFixed(2);
+                    price.tier_3 = price.tier_3.toFixed(2);
+                    price.tier_4 = price.tier_4.toFixed(2);
+                    price.tier_5 = price.tier_5.toFixed(2);
+                    price.tier_6 = price.tier_6.toFixed(2);
+                    price.tier_7 = price.tier_7.toFixed(2);
+                    return true;
+                }),
                 saved: false,
             };
         },

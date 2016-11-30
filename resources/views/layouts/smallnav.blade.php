@@ -57,7 +57,9 @@
             </a>
         </li>
         <li>
-        	Admin Settings
+        	<a href="{{route('admin.settings.index')}}">
+        		Admin Settings
+        	</a>
         </li>
         <li>
             <a href="{{ url('/logout') }}"
