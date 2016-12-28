@@ -16,7 +16,12 @@ class CreateOrderLinesTable extends Migration
         Schema::create('order_lines', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order_id');
-            $table->integer('order_base_id');
+            $table->integer('base_id')->nullable();
+            $table->string('blank_name')->nullable();
+            $table->string('design_name')->default('');
+            $table->string('blank_colors')->default('');
+            $table->string('ink_colors')->default('');
+            $table->integer('screen_count')->default(0);
             $table->timestamps();
         });
     }

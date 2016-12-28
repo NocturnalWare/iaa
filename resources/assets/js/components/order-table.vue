@@ -45,146 +45,108 @@
             </a>
         <div class="row">
             <div v-if="addingManual" class="col-xs-12 col-md-11" style="border-radius:5px;border:1px solid #ddd;margin:10px;padding:20px 0px 40px 0px;">
+                <legend style="padding-left:15px;"><h3>New Line</h3></legend>
                 <div class="col-xs-12 col-md-11">
-                    <div class="col-md-6">
-                        <span class="input-group col-xs-12 no-padding">
-                            <label>Product Name</label>
-                            <input class="form-control" v-model="manualProduct.product_name">
+                    <div class="col-md-3">
+                        <span class="input-group">
+                            <label>Blank Name</label>
+                            <input class="form-control" v-model="manualProduct.blank_name">
                         </span>
                     </div>
-                    <div class="col-md-6">
-                        <span class="input-group col-xs-12 no-padding">
-                            <label>Color(s)</label>
-                            <input class="form-control" v-model="manualProduct.color_name">
+                    <div class="col-md-3">
+                        <span class="input-group">
+                            <label>Blank Color(s)</label>
+                            <input class="form-control" v-model="manualProduct.blank_colors">
                         </span>
                     </div>
-                </div>
-                <div class="col-xs-12 col-md-3" style="padding-right:0px;">
-                    <div class="col-xs-12" style="padding-right:0px;">
-                        <div style="border:1px solid #ddd;border-radius:5px;color:#ddd;padding-right:0px;padding-bottom:15px;">
-                            <center>
-                                <h3>Add Artwork After Save</h3>
-                                <br>
-                                <i style="font-size:7em" class="fa fa-file-picture-o"></i>
-                            </center>
-                        </div>
+                    <div class="col-md-3">
+                        <span class="input-group">
+                            <label>Design Name</label>
+                            <input class="form-control" v-model="manualProduct.design_name">
+                        </span>
                     </div>
-                </div>
-                <div class="col-xs-12 col-md-8" style="padding-left:0px;padding-right:25px;">
-                    <div style="border-radius:5px;border:1px solid #ddd;padding:20px;"> 
-                        <div class="row">
-                            <button class="btn btn-info pull-right" @click="addSize">ADD SIZE</button>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-2">
-                                <label>Size</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>Price</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>Margin</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>Sale Price</label>
-                            </div>
-                            <div class="col-xs-2">
-                                <label>Qty</label>
-                            </div>
-                            <div class="col-xs-1">
-                                <label>Total</label>
-                            </div>
-                        </div>
-                        <div v-if="manualProduct.sizes.length > 0">
-                            <hr />
-                            <div  v-for="size in manualProduct.sizes" class="row">
-                                <div class="col-xs-2">
-                                    <span class="input-group">
-                                        <input class="form-control" v-model="size.size_name">
-                                    </span>
-                                </div>
-                                <div class="col-xs-2">
-                                    <span class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <input class="form-control" v-model="size.price">
-                                    </span>
-                                </div>
-                                <div class="col-xs-2">
-                                    <span class="input-group">
-                                        <input type="range" min="20" max="100" v-model='size.margin'>
-                                        <span class="input-group-addon">{{size.margin}}%</span>
-                                    </span>
-                                </div>
-                                <div class="col-xs-2">
-                                    <span class="input-group">
-                                        <label>${{sizePrice(size)}}</label>
-                                    </span>
-                                </div>
-                                <div class="col-xs-2">
-                                    <span class="input-group">
-                                        <input class="form-control" v-model="size.qty">
-                                    </span>
-                                </div>
-                                <div class="col-xs-1">
-                                    <span class="input-group">
-                                        <label>${{sizePriceTotal(size)}}</label>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-md-3" v-if="manualProduct.blank_name !== '' && manualProduct.blank_colors !== '' && manualProduct.design_name !== ''">
+                        <label></label>
+                        <span class="input-group">
+                            <button class="btn btn-success pull-right" @click="saveManualProduct"><i class="fa fa-check-o"></i>ADD TO ORDER</button>
+                        </span>
                     </div>
-                    <div class="row" v-if="manualProduct.sizes.length > 0">
-                        <div class="col-xs-12 col-md-6 col-md-offset-6">
-                            <span style="font-size:2.3em" class="pull-right">${{sizeTotal(manualProduct)}}</span>
-                            <span style="font-size:1.6em;padding-right:12px;padding-top:5px;" class="pull-right">Total</span>
-                        </div>
-                    </div>
-                    <div class="row" v-if="manualProduct.sizes.length > 0 && manualProduct.product_name !== '' && manualProduct.color_name !== '' && sizeTotal(manualProduct) > 0">
-                        <button class="btn btn-success pull-right" @click="saveManualProduct"><i class="fa fa-check-o"></i>SAVE TO ORDER</button>
-                    </div>
+                </div>                
+                <div class="col-xs-12" style="padding-left:0px;padding-right:25px;padding-top:10px;">
                 </div>
             </div>
-            <div v-for="base in order.lines">
-                <div class="col-xs-12">
-                    <h3>
-                        {{base.base.style.brand.name}} {{base.base.style.style_name}} {{base.base.style.title}}
-                        <span style="font-size:.6em">{{base.base.color_name}}</span>
-                        <div class="btn-group pull-right">
-                          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-trash" <span class="caret"></i>
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li @click="removeBase(base)" class="btn">
-                                <i class="fa fa-lg fa-times-circle-o"></i>
-                                Remove From Order
-                            </li>
-                          </ul>
+            <div v-for="line in order.lines">
+                <div class="col-xs-12" style="box-shadow: 3px 3px 3px #ddd; border:1px solid #aaa;border-radius:10px;padding:20px;">
+                    <div class="col-xs-12">
+                        <h3>{{line.blank_name}}</h3>
+                        <span style="font-size:.6em">{{line.blank_colors}}</span>
+                    </div>
+                    <div class="col-xs-12 form-inline">
+                        <div class="input-group col-xs-3">
+                            <label>Blank Name</label>
+                            <input class="form-control" v-model="line.blank_name">
                         </div>
-                    </h3>
-                </div>
-                <div class="col-xs-12 well" style="background-color:#fff">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <span class="input-group col-xs-12">
-                                <label>Design Name</label>
-                                <input class="form-control">
-                            </span>
+                        <div class="input-group col-xs-3">
+                            <label>Blank Colors</label>
+                            <input class="form-control" v-model="line.blank_colors">
                         </div>
-                        <div class="col-xs-6">
-                            <span class="input-group">
-                                <label>Ink Colors</label><br>
-                                Red Blue Grey Pink
-                            </span>
+                        <div class="input-group col-xs-3">
+                            <label>Design Name</label>
+                            <input class="form-control" v-model="line.design_name">
                         </div>
                     </div>
                     <div class="col-xs-12" style="padding:15px;">
-                        <button class="btn btn-primary col-xs-4" :class="['', base.showPanel == 'product' ? 'btn-primary' : 'btn-default']" @click="showProduct(base)">Product</button>
-                        <button class="btn btn-default col-xs-4" :class="['', base.showPanel == 'deco' ? 'btn-primary' : 'btn-default']" @click="showDeco(base)">Deco</button>
-                        <button class="btn btn-default col-xs-4" :class="['', base.showPanel == 'breakdown' ? 'btn-primary' : 'btn-default']" @click="showBreakdown(base)">Breakdown</button>
+                        <button class="btn btn-primary col-xs-4" :class="['', line.showPanel == 'product' ? 'btn-primary' : 'btn-default']" @click="showProduct(line)">Product</button>
+                        <button class="btn btn-default col-xs-4" :class="['', line.showPanel == 'deco' ? 'btn-primary' : 'btn-default']" @click="showDeco(line)">Deco</button>
+                        <button class="btn btn-default col-xs-4" :class="['', line.showPanel == 'breakdown' ? 'btn-primary' : 'btn-default']" @click="showBreakdown(line)">Breakdown</button>
                     </div>
-                    <div v-show="base.showPanel == 'deco'">
+                    <div v-show="line.showPanel == 'product'">
+                        <div class="col-xs-12 col-md-3">
+                            <img style="height:300px;" class="img-responsive" src="http://i3.kym-cdn.com/entries/icons/original/000/019/422/IMG_4983.PNG">
+                        </div>
+                        <div class="col-xs-12 col-md-8">
+                            <div class="row" style="border-bottom:1px solid #ddd;margin-bottom:6px">
+                                <div class="col-xs-3">
+                                    <label>Size</label>
+                                </div>
+                                <div class="col-xs-3">
+                                    <label>Price</label>
+                                </div>
+                                <div class="col-xs-3">
+                                    <label>Qty</label>
+                                </div>
+                                <div class="col-xs-3">
+                                    <label>Total</label>
+                                </div>
+                            </div>
+                            <div v-for="size in line.sizes">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        {{size.size_name}}
+                                    </div>
+                                    <div class="col-xs-3">
+                                        {{size.product.customer_price}}
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <input class="form-control" v-model="size.qty">    
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <b>${{size}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6 col-md-offset-6">
+                                    <span style="font-size:2.3em" class="pull-right">${{size}}</span>
+                                    <span style="font-size:1.6em;padding-right:12px;padding-top:5px;" class="pull-right">Product Total</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-show="line.showPanel == 'deco'">
                         <div class="col-xs-12 well" style="background-color:#fff">
-                            <button class="btn btn-xs pull-right" @click="addDeco(base)">ADD LOCATION</button>
+                            <button class="btn btn-xs pull-right" @click="addDeco(line)">ADD LOCATION</button>
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -196,7 +158,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="deco in base.decos">
+                                    <tr v-for="line in line.decos">
                                         <td class="col-xs-2">
                                             <select class="form-control" v-model="deco.art_id">
                                                 <option value="1">A.psd</option>
@@ -233,69 +195,11 @@
                             </table>
                         </div>
                     </div>
-                    <div v-show="base.showPanel == 'product'">
-                        <div class="col-xs-12 col-md-3">
-                            <img style="height:300px;" class="img-responsive" :src="imgUrl(base.base.style)">
-                        </div>
-                        <div class="col-xs-12 col-md-8">
-                            <div class="row" style="border-bottom:1px solid #ddd;margin-bottom:6px">
-                                <div class="col-xs-2">
-                                    <label>Size</label>
-                                </div>
-                                <div class="col-xs-2">
-                                    <label>Price</label>
-                                </div>
-                                <div class="col-xs-2">
-                                    <label>Margin</label>
-                                </div>
-                                <div class="col-xs-2">
-                                    <label>Sale Price</label>
-                                </div>
-                                <div class="col-xs-2">
-                                    <label>Qty</label>
-                                </div>
-                                <div class="col-xs-1">
-                                    <label>Total</label>
-                                </div>
-                            </div>
-                            <div v-for="index in base.base.index">
-                                <div class="row">
-                                    <div class="col-xs-2">
-                                        {{index.size_name}}
-                                    </div>
-                                    <div class="col-xs-2">
-                                        {{index.product.customer_price}}
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <span class="input-group">
-                                            <input type="range" min="20" max="100" v-model='index.margin'>
-                                            <span class="input-group-addon">{{index.margin}}%</span>
-                                        </span>
-                                    </div>
-                                    <div class="col-xs-2">
-                                        ${{unitPrice(index)}}
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <input class="form-control" v-model="index.qty">    
-                                    </div>
-                                    <div class="col-xs-1">
-                                        <b>${{totalPrice(index)}}</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr />
-                            <div class="row">
-                                <div class="col-xs-12 col-md-6 col-md-offset-6">
-                                    <span style="font-size:2.3em" class="pull-right">${{indexTotal(base)}}</span>
-                                    <span style="font-size:1.6em;padding-right:12px;padding-top:5px;" class="pull-right">Product Total</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+
+        <div class="row" v-if="order.lines.length > 0">
             <button class="btn btn-success pull-right">
                 <i class="fa fa-check"></i>
                 SAVE
@@ -320,27 +224,31 @@
             },
             isCurrentOrder: function(){
                 return this.order.id === inkaddict.currentOrder.id;
+            },
+            newSize: function(){
+
             }
         },
         data(){
             return {
                 order: {},
                 addingManual: false,
-                manualProduct: { product_name : '', color_name : '', sizes : []},
+                manualProduct: { blank_name : '', design_name : '', blank_colors : '', is_manual : true, sizes : [], decos : [], showPanel : 'product'},
             };
         },
         methods: {
             addDeco: function(base){
                 base.decos.push({art_id : 1});
             },
-            showProduct: function(base){
-                base.showPanel = 'product';
+            showProduct: function(line){
+                line.showPanel = 'product';
             },
-            showDeco: function(base){
-                base.showPanel = 'deco';
+            showDeco: function(line){
+                console.log(line);
+                line.showPanel = 'deco';
             },
-            showBreakdown: function(base){
-                base.showPanel = 'breakdown';
+            showBreakdown: function(line){
+                line.showPanel = 'breakdown';
             },
             indexTotal: function(base){
                 let total = 0;
@@ -400,7 +308,9 @@
                 this.manualProduct.sizes.push({ size_name : '', price : 0.00, margin : 40, qty : 0 });
             },
             saveManualProduct: function(){
-                this.manualProduct = { product_name : '', color_name : '', sizes : [] };
+                this.order.lines.push(this.manualProduct);
+                this.addingManual = false;
+                this.manualProduct = { blank_name : '', blank_colors : '', is_manual : true, sizes : [], decos : [], showPanel : 'product' };
             },
             removeBase: function(base){
                 let component = this;

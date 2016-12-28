@@ -66,6 +66,20 @@ class OrdersController extends Controller
      *
      * @return void
      */
+    public function store(Request $request)
+    {
+        $company = Company::find($request->get('company_id'));
+        $order = $company->orders()->save(new Order($request->only(['name', 'hard_due'])));
+
+        return redirect()->route('orders.show', $order->id);
+    }
+    
+
+    /**
+     * Description
+     *
+     * @return void
+     */
     public function create()
     {
     	$companies = [];

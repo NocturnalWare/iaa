@@ -13,6 +13,7 @@ class Order extends Model
     const COMPLETE = 4;
     const SHIPPED = 5;
     const DELIVERED = 6;
+    protected $fillable = ['name', 'hard_due'];
     protected $with = ['notes', 'company', 'lines', 'bases'];
 
     /**
