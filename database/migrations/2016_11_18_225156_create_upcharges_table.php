@@ -16,7 +16,7 @@ class CreateUpchargesTable extends Migration
         Schema::create('upcharges', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->default('');
-            $table->tinyint('per_unit')->default(1);
+            $table->boolean('per_unit')->default(1);
             $table->double('markup_rate')->default(0.0);
             $table->timestamps();
         });

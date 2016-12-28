@@ -7,10 +7,11 @@ use App\SSActivewear\SSActivewearBase;
 class OrderLine extends Model
 {
     protected $fillable = [
-        'color_name',
-        'color_1',
-        'color_2',
-        'size',
+        'blank_name',
+        'design_name',
+        'blank_colors',
+        'ink_colors',
+        'screen_count'
     ];
 
     protected $with = ['base', 'decos'];

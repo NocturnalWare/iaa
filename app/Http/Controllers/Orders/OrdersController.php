@@ -89,6 +89,23 @@ class OrdersController extends Controller
 
     	return view('orders.create', compact('companies'));
     }
+    
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function addLine(Request $request, Order $order)
+    {
+        $injection = $request->get('line');
+        $line = new OrderLine;
+        $line->blank_name = $injection['blank_name'];
+        $line->blank_colors = $injection['blank_colors'];
+        $line->design_name = $injection['design_name'];
+        $line->screen_count = 0;
+
+        return $order->lines()->save($line);
+    }
 
     /**
      * Description

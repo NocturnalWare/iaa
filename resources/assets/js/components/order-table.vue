@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div v-for="line in order.lines">
-                <div class="col-xs-12" style="box-shadow: 3px 3px 3px #ddd; border:1px solid #aaa;border-radius:10px;padding:20px;">
+                <div class="col-xs-12 order-line-block">
                     <div class="col-xs-12">
                         <h3>{{line.blank_name}}</h3>
                         <span style="font-size:.6em">{{line.blank_colors}}</span>
@@ -112,11 +112,14 @@
                                 <div class="col-xs-3">
                                     <label>Price</label>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                     <label>Qty</label>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                     <label>Total</label>
+                                </div>
+                                <div class="col-xs-2">
+                                    <button class="btn btn-xs btn-success" @click="addSize(line)">ADD SIZE</button>
                                 </div>
                             </div>
                             <div v-for="size in line.sizes">
@@ -127,10 +130,10 @@
                                     <div class="col-xs-3">
                                         {{size.product.customer_price}}
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                         <input class="form-control" v-model="size.qty">    
                                     </div>
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
                                         <b>${{size}}</b>
                                     </div>
                                 </div>
@@ -225,9 +228,6 @@
             isCurrentOrder: function(){
                 return this.order.id === inkaddict.currentOrder.id;
             },
-            newSize: function(){
-
-            }
         },
         data(){
             return {
@@ -237,6 +237,9 @@
             };
         },
         methods: {
+            addSize: function(line){
+                line.sizes.push({order_line_id : line.id, size_name : '', quantity : 24 });
+            },
             addDeco: function(base){
                 base.decos.push({art_id : 1});
             },
@@ -308,8 +311,13 @@
                 this.manualProduct.sizes.push({ size_name : '', price : 0.00, margin : 40, qty : 0 });
             },
             saveManualProduct: function(){
-                this.order.lines.push(this.manualProduct);
+                let component = this;
                 this.addingManual = false;
+                let call = Vue.http.post('addLine', {order : this.order.id, line : this.manualProduct, _token : window.Laravel.csrfToken});
+                call.then(function(response){
+                    console.log(response.data);
+                    component.order.lines.push(response.data);
+                });
                 this.manualProduct = { blank_name : '', blank_colors : '', is_manual : true, sizes : [], decos : [], showPanel : 'product' };
             },
             removeBase: function(base){
@@ -332,5 +340,13 @@
 <style>
     .no-padding{
         padding:0px;
+    }
+    .order-line-block{
+        box-shadow: 3px 3px 3px #ddd;
+        border:1px solid #aaa;
+        border-radius:10px;padding:20px;
+    }
+    .order-line-block:hover{
+        background-color:#f0f0f0;
     }
 </style>
