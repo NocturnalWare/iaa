@@ -1,40 +1,5 @@
 <template>
     <div>
-        <legend>
-            <h2>
-                {{order.company.name}}
-                <div class="col-md-6 col-xs-11 pull-right">
-                    <span v-if="isCurrentOrder" class="bg-info">Current Order</span>
-                    <a v-if="!isCurrentOrder" href="current/setAsCurrentOrder">
-                        <button class="btn btn-primary">MAKE CURRENT ORDER</button>
-                    </a>
-                </div>
-            </h2>
-            <div class="col-xs-12 col-md-6">
-                <span class="input-group">
-                    <label>Order Name</label>
-                    <input value="{{order.company.name}}" class="form-control" name="order_name" placeholder="Order Name">
-                </span>
-                <span class="input-group">
-                    <label>Due</label>
-                    <span v-if="pastDue" class="bg-warning text-danger pull-right" style="padding:6px;">Past Due</span>
-                    <input type="date" :value="fixDate(order.hard_due)" class="form-control" name="hard_due">
-                </span>
-            </div>
-            <div class="col-xs-12 col-md-6">
-                <label>Address</label>
-                <p>
-                    {{order.company.profile.street_1}}
-                    {{order.company.profile.street_2}}
-                    <br>
-                    {{order.company.profile.city}}
-                    {{order.company.profile.state}},
-                    {{order.company.profile.zip}}
-                    <br>
-                    {{order.company.profile.country}}
-                </p>
-            </div>
-        </legend>
         <div class="col-xs-12 col-md-11" style="padding-top: 15px;">
             <button class="btn" @click="addingManual = !addingManual" :class="['', addingManual ? 'btn-primary' : 'btn-info']">ADD{{addingManual ? 'ING' : ''}} MANUAL PRODUCT</button>
             <a target="_blank">
