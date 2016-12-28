@@ -17,6 +17,7 @@ class CreateOrderLineSizesTable extends Migration
             $table->increments('id');
             $table->integer('order_line_id')->default(0);
             $table->string('size_name')->default('');
+            $table->double('price')->default(0.00);
             $table->integer('quantity')->default(24);
             $table->timestamps();
         });

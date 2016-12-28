@@ -14,7 +14,7 @@ class OrderLine extends Model
         'screen_count'
     ];
 
-    protected $with = ['base', 'decos'];
+    protected $with = ['base', 'decos', 'sizes'];
 
     protected $appends = ['showPanel'];
     /**
@@ -36,6 +36,17 @@ class OrderLine extends Model
     {
         return $this->belongsTo(SSActivewearBase::class, 'order_base_id', 'id');
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function sizes()
+    {
+        return $this->hasMany(OrderLineSize::class);
+    }
+    
 
     /**
      * Description

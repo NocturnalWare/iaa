@@ -125,13 +125,13 @@
                             <div v-for="size in line.sizes">
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        {{size.size_name}}
+                                        <input class="form-control" v-model="size.size_name">
                                     </div>
                                     <div class="col-xs-3">
-                                        {{size.product.customer_price}}
+                                        <input class="form-control" v-model="size.price">
                                     </div>
                                     <div class="col-xs-2">
-                                        <input class="form-control" v-model="size.qty">    
+                                        <input class="form-control" v-model="size.quantity">    
                                     </div>
                                     <div class="col-xs-2">
                                         <b>${{size}}</b>
@@ -238,6 +238,7 @@
         },
         methods: {
             addSize: function(line){
+                console.log(line);
                 line.sizes.push({order_line_id : line.id, size_name : '', quantity : 24 });
             },
             addDeco: function(base){
@@ -306,9 +307,6 @@
             },
             imgUrl: function(style){
                 return 'https://www.ssactivewear.com/'+style.style_image;
-            },
-            addSize: function(){
-                this.manualProduct.sizes.push({ size_name : '', price : 0.00, margin : 40, qty : 0 });
             },
             saveManualProduct: function(){
                 let component = this;

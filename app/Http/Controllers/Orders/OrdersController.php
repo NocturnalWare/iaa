@@ -11,6 +11,7 @@ use App\Orders\CurrentOrder;
 use App\Orders\OrderUpdate;
 use App\Orders\OrderStatus;
 use App\Orders\OrderLine;
+use App\Orders\OrderLineSize;
 use App\Orders\OrderBase;
 use App\Profiles\Company;
 use App\SSActivewear\SSActivewearProduct;
@@ -103,9 +104,32 @@ class OrdersController extends Controller
         $line->blank_colors = $injection['blank_colors'];
         $line->design_name = $injection['design_name'];
         $line->screen_count = 0;
+        $newline = $order->lines()->save($line);
 
-        return $order->lines()->save($line);
+        $newline->sizes()->saveMany($this->makeSizes());
+        return OrderLine::with('sizes')->find($newline->id);
     }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    private function makeSizes()
+    {
+
+        return [
+            new OrderLineSize(['size_name' => 'x-small', 'quantity' => 24, 'price' => '0.00']),
+            new OrderLineSize(['size_name' => 'small', 'quantity' => 24, 'price' => '0.00']),
+            new OrderLineSize(['size_name' => 'medium', 'quantity' => 24, 'price' => '0.00']),
+            new OrderLineSize(['size_name' => 'large', 'quantity' => 24, 'price' => '0.00']),
+            new OrderLineSize(['size_name' => 'x-large', 'quantity' => 24, 'price' => '0.00']),
+            new OrderLineSize(['size_name' => 'xx-large', 'quantity' => 24, 'price' => '0.00']),
+            new OrderLineSize(['size_name' => 'xxx-large', 'quantity' => 24, 'price' => '0.00']),
+        ];
+        return;
+    }
+    
 
     /**
      * Description
