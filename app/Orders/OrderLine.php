@@ -44,7 +44,7 @@ class OrderLine extends Model
      */
     public function sizes()
     {
-        return $this->hasMany(OrderLineSize::class);
+        return $this->hasMany(OrderLineSize::class, 'order_line_id', 'id');
     }
     
 

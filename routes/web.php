@@ -56,6 +56,8 @@ Route::group(['middleware' => ['auth', 'setOrderCounts']], function(){
 	Route::get('/orders/product/add/{base}', 'Orders\OrdersController@addProductToOrder')->name('order.products.add');
 	Route::post('/orders/{order}/removeBase', 'Orders\OrdersController@removeBase')->name('order.products.removeBase');
 	Route::post('/orders/{order}/addLine', 'Orders\OrdersController@addLine')->name('order.products.addLine');
+	Route::post('/orders/{line}/addSize', 'Orders\OrdersController@addSize')->name('order.products.addSize');
+	Route::post('/orders/{line}/addAllSizes', 'Orders\OrdersController@addAllSizes')->name('order.products.addAllSizes');
 	Route::delete('/orders/product/destroy/{order_line}', 'Orders\OrdersController@destroyLine')->name('order.products.destroy');
 
 	//NEW

@@ -115,6 +115,30 @@ class OrdersController extends Controller
      *
      * @return void
      */
+    public function addSize(OrderLine $line)
+    {
+        $size = new OrderLineSize();
+        $size->size_name = '';
+        $size->quantity = 24;
+        $size->price = 0.00;
+        return $line->sizes()->save($size);
+    }
+
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function addAllSizes(OrderLine $line)
+    {
+        return $line->sizes()->saveMany($this->makeSizes());
+    }
+    
+    /**
+     * Description
+     *
+     * @return void
+     */
     private function makeSizes()
     {
 

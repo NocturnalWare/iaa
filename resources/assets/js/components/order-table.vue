@@ -85,6 +85,7 @@
                                 </div>
                                 <div class="col-xs-2">
                                     <button class="btn btn-xs btn-success" @click="addSize(line)">ADD SIZE</button>
+                                    <button class="btn btn-xs btn-success" @click="addAllSizes(line)">ADD ALL SIZES</button>
                                 </div>
                             </div>
                             <div v-for="size in line.sizes">
@@ -272,6 +273,22 @@
             },
             imgUrl: function(style){
                 return 'https://www.ssactivewear.com/'+style.style_image;
+            },
+            addSize: function(line){
+                let component = this;
+                let call = Vue.http.post('addSize', {line : line.id, _token : window.Laravel.csrfToken});
+                call.then(function(response){
+                    line.sizes.push(response.data);
+                });
+            },
+            addAllSizes: function(line){
+                let component = this;
+                let call = Vue.http.post('addAllSizes', {line : line.id, _token : window.Laravel.csrfToken});
+                call.then(function(response){
+                    response.data.forEach(function(size){
+                        line.sizes.push(size);
+                    });
+                });
             },
             saveManualProduct: function(){
                 let component = this;

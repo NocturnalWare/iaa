@@ -19,7 +19,7 @@ class OrderLineSize extends Model
      */
     public function line()
     {
-    	return $this->belongsTo(OrderLine::class);
+    	return $this->belongsTo(OrderLine::class, 'id', 'order_line_id');
     }
     
 }
