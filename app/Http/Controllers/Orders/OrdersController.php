@@ -139,7 +139,7 @@ class OrdersController extends Controller
         $line->blank_colors = $injection['blank_colors'];
         $line->save();
         foreach($injection['sizes'] as $size){
-            $update = OrderLineSize::find($size['id']);
+            $update = $line->sizes()->where('id', ($size['id']))->first();
             $update->size_name = $size['size_name'];
             $update->price = $size['price'];
             $update->quantity = $size['quantity'];
