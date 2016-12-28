@@ -17,6 +17,7 @@ class CreateOrderLinesTable extends Migration
             $table->increments('id');
             $table->integer('order_id');
             $table->integer('base_id')->nullable();
+            $table->integer('upcharge')->default(40);
             $table->string('blank_name')->nullable();
             $table->string('design_name')->default('');
             $table->string('blank_colors')->default('');

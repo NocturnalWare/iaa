@@ -7,6 +7,7 @@ use App\SSActivewear\SSActivewearBase;
 class OrderLine extends Model
 {
     protected $fillable = [
+        'upcharge',
         'blank_name',
         'design_name',
         'blank_colors',

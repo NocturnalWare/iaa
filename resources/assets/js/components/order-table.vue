@@ -70,6 +70,10 @@
                             <img style="height:300px;" class="img-responsive" src="http://i3.kym-cdn.com/entries/icons/original/000/019/422/IMG_4983.PNG">
                         </div>
                         <div class="col-xs-12 col-md-8">
+                            <div class="row">
+                                <button class="btn btn-xs btn-success pull-right" @click="addSize(line)">ADD SIZE</button>
+                                <button class="btn btn-xs btn-success pull-right" @click="addAllSizes(line)">ADD ALL SIZES</button>
+                            </div>
                             <div class="row" style="border-bottom:1px solid #ddd;margin-bottom:6px">
                                 <div class="col-xs-3">
                                     <label>Size</label>
@@ -82,10 +86,6 @@
                                 </div>
                                 <div class="col-xs-2">
                                     <label>Total</label>
-                                </div>
-                                <div class="col-xs-2">
-                                    <button class="btn btn-xs btn-success" @click="addSize(line)">ADD SIZE</button>
-                                    <button class="btn btn-xs btn-success" @click="addAllSizes(line)">ADD ALL SIZES</button>
                                 </div>
                             </div>
                             <div v-for="size in line.sizes">
@@ -100,15 +100,21 @@
                                         <input class="form-control" v-model="size.quantity">    
                                     </div>
                                     <div class="col-xs-2">
-                                        <b>${{size}}</b>
+                                        <b>${{sizeTotal(size, line).toFixed(2)}}</b>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <i class="btn btn-danger btn-xs fa fa-times-circle-o" @click="removeSize(size, line)"></i>
                                     </div>
                                 </div>
                             </div>
                             <hr />
-                            <div class="row">
-                                <div class="col-xs-12 col-md-6 col-md-offset-6">
-                                    <span style="font-size:2.3em" class="pull-right">${{size}}</span>
-                                    <span style="font-size:1.6em;padding-right:12px;padding-top:5px;" class="pull-right">Product Total</span>
+                            <div v-if="lineTotal(line) > 0">
+                                <div class="row">
+                                    <span style="font-size:2.3em" class="pull-right">${{lineTotal(line)}}</span>
+                                    <span style="font-size:1.6em;padding-right:12px;padding-top:5px;" class="pull-right">Total</span>
+                                </div>
+                                <div class="row">
+                                    <button class="pull-right btn btn-primary" @click="saveLine(line)">SAVE</button>
                                 </div>
                             </div>
                         </div>
@@ -238,34 +244,19 @@
                 price = price + index.product.customer_price;
                 return price.toFixed(2);
             },
-            sizeTotal: function(manualProduct){
-                let total = 0;
-                let component = this;
-                manualProduct.sizes.forEach(function(size){
-                    total = parseFloat(total) + parseFloat(component.sizePriceTotal(size));
-                });
-                return parseFloat(total).toFixed(2);
-            },
-            sizePriceTotal: function(size){
-                let price = this.sizePrice(size);
-                price = price * size.qty;
-                return price.toFixed(2);
-            },
-            sizePrice: function(size){
-                let price = (size.margin/100) * size.price;
-                price = parseFloat(price) + parseFloat(size.price);
-                return price.toFixed(2);
+            sizeTotal: function(size, line){
+                return (parseInt(size.quantity) * parseFloat(size.price)) * ((parseInt(line.upcharge) / 100)+1);
             },
             save: function(){
 
             },
             lineTotal: function(line){
-                let price = (line.product.customer_price * line.qty) * (line.margin/100 + 1);
-                return price.toFixed(2);
-            },
-            adjustedPrice: function(line){
-                let price = line.product.customer_price * (line.margin/100 + 1);
-                return price.toFixed(2);
+                let total = 0;
+                let component = this;
+                line.sizes.forEach(function(size){
+                    total += component.sizeTotal(size, line);
+                });
+                return parseFloat(total).toFixed(2);
             },
             fixDate: function(date){
                 console.log(moment(date).format('Y-M-d'));
@@ -273,6 +264,17 @@
             },
             imgUrl: function(style){
                 return 'https://www.ssactivewear.com/'+style.style_image;
+            },
+            saveLine: function(line){
+                let call = Vue.http.post('saveLine', {line : line, _token : window.Laravel.csrfToken});
+            },
+            removeSize: function(size, line){
+                let call = Vue.http.post('removeSize', {size : size.id, _token : window.Laravel.csrfToken});
+                call.then(function(response){
+                    if(response.data == 200){
+                        line.sizes.$remove(size);
+                    }
+                });
             },
             addSize: function(line){
                 let component = this;

@@ -115,8 +115,9 @@ class OrdersController extends Controller
      *
      * @return void
      */
-    public function addSize(OrderLine $line)
+    public function addSize(Request $request)
     {
+        $line = OrderLine::find($request->get('line'));
         $size = new OrderLineSize();
         $size->size_name = '';
         $size->quantity = 24;
@@ -129,8 +130,44 @@ class OrdersController extends Controller
      *
      * @return void
      */
-    public function addAllSizes(OrderLine $line)
+    public function saveLine(Request $request)
     {
+        $injection = $request->get('line');
+        $line = OrderLine::find($injection['id']);
+        $line->design_name = $injection['design_name'];
+        $line->blank_name = $injection['blank_name'];
+        $line->blank_colors = $injection['blank_colors'];
+        $line->save();
+        foreach($injection['sizes'] as $size){
+            $update = OrderLineSize::find($size['id']);
+            $update->size_name = $size['size_name'];
+            $update->price = $size['price'];
+            $update->quantity = $size['quantity'];
+            $update->save();
+        }
+
+        return true;
+    }
+    
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function removeSize(Request $request)
+    {
+        OrderLineSize::find($request->get('size'))->delete();
+        return 200;
+    }
+    
+    /**
+     * Description
+     *
+     * @return void
+     */
+    public function addAllSizes(Request $request)
+    {
+        $line = OrderLine::find($request->get('line'));
         return $line->sizes()->saveMany($this->makeSizes());
     }
     
